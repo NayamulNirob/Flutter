@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_jee_59/pages/loginpage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,23 +12,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar:AppBar(
-          backgroundColor: Colors.green,
-          centerTitle: true,
-          title: const Text("First Flutter",
-          style: TextStyle(
-            color: Colors.white
-          ),
-          ),
-
-        ),
-        body:const Center(child: Text("Hello World")),
-
-        floatingActionButton:FloatingActionButton (onPressed: () => {},
-          child: Icon(Icons.thumb_up_alt,color: Colors.amber,),
-        ),
-      ),
+      debugShowCheckedModeBanner: false,
+      home:Loginpage()
     );
   }
 }
