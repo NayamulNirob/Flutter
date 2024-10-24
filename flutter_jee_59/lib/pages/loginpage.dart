@@ -18,12 +18,24 @@ final TextEditingController password= TextEditingController();
           children: [
             Text(
               'Use Email And Password',
-              style: GoogleFonts.lato(
+              style: GoogleFonts.roboto(
                 textStyle: Theme.of(context).textTheme.displayLarge,
                 fontSize: 35.0,
                 fontWeight: FontWeight.w800,
+
                 fontStyle: FontStyle.italic
               )
+            ),
+            Text(
+              'Hello World',
+              style: GoogleFonts.arimo(
+                color: Colors.green,
+                fontSize: 25.0,
+                fontWeight: FontWeight.w200,
+                fontStyle: FontStyle.normal,
+                letterSpacing: 6.0,
+
+              ),
             ),
             const SizedBox(
               height: 20.0,
@@ -45,6 +57,7 @@ final TextEditingController password= TextEditingController();
               decoration: const InputDecoration(
                 labelText: 'Password',
                 border: OutlineInputBorder(),
+
                 prefixIcon: Icon(Icons.password)
 
               ),
@@ -75,11 +88,10 @@ final TextEditingController password= TextEditingController();
                         fontStyle: FontStyle.italic,
                       ).fontFamily
                   ),
-
-                )
+                ),
             ),
-
           ],
+
         ),
       ),
     );
