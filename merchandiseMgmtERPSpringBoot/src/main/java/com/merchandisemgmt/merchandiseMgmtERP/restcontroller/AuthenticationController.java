@@ -19,10 +19,10 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
-            @RequestPart User request,
-            @RequestParam(value = "image", required = false) MultipartFile imageFile
+            @RequestBody User request
+//            @RequestParam(value = "image", required = false) MultipartFile imageFile
     ) throws IOException {
-        return ResponseEntity.ok(authService.register(request, imageFile));
+        return ResponseEntity.ok(authService.register(request));
     }
 
     @PostMapping("/register/admin")

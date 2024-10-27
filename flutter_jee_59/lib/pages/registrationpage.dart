@@ -10,72 +10,112 @@ import 'package:image_picker/image_picker.dart';
 import '../model/user.dart';
 import 'package:http_parser/http_parser.dart';
 
+import 'loginpage.dart';
+
 class RegistrationPage extends StatefulWidget {
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-  final TextEditingController nameController = TextEditingController()..text = "TEST";
-  final TextEditingController emailController = TextEditingController()..text = "TEST@EMAIL.COM";
-  final TextEditingController passwordController = TextEditingController()..text = "123465";
-  final TextEditingController confirmPasswordController = TextEditingController()..text = "123465";
-  final TextEditingController cellController = TextEditingController()..text = "01700000000";
-  final TextEditingController addressController = TextEditingController()..text = "ADDR";
 
-  DateTime? dob;
+  final TextEditingController name = TextEditingController();
+
+  final TextEditingController email = TextEditingController();
+
+  final TextEditingController password = TextEditingController();
+
+  final TextEditingController confirmPassword = TextEditingController();
+
+  final TextEditingController cell = TextEditingController();
+
+  final TextEditingController address = TextEditingController();
+
+  final DateTimeFieldPickerPlatform dob= DateTimeFieldPickerPlatform.material;
+
+  // final TextEditingController gender = TextEditingController();
+
   String? selectedGender;
-  File? _image;
+
+  DateTime? selectedDOB;
 
   final _formKey = GlobalKey<FormState>();
 
-  void _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
+
+
+
+  // // Method to validate form and check passwords
+  // void _register() {
+  //   if (_formKey.currentState!.validate()) {
+  //
+  //
+  //     String uName = name.text;
+  //     String uEmail = email.text;
+  //     String uPassword = password.text;
+  //
+  //
+  //
+  //     // Registration logic goes here (e.g., sending data to server)
+  //
+  //     print('Name: $uName, Email: $uEmail, Password: $uPassword');
+  //   }
+  // }
+
+
+
+  // Method to validate form and check passwords
+  void _register() async {
+
+    if (_formKey.currentState!.validate()) {
+      String uName = name.text;
+      String uEmail = email.text;
+      String uPassword = password.text;
+      String uCell = cell.text;
+      String uAddress = address.text;
+      String uGender = selectedGender ?? 'Other';
+      String uDob = selectedDOB != null ? selectedDOB!.toIso8601String() : '';
+
+      // Send data to the server
+      final response = await _sendDataToBackend(uName, uEmail, uPassword, uCell, uAddress, uGender, uDob);
+
+      if (response.statusCode == 201 || response.statusCode == 200  ) {
+        // Registration successful
+        print('Registration successful!');
+      } else if (response.statusCode == 409) {
+        // User already exists
+        print('User already exists!');
+      } else {
+        print('Registration failed with status: ${response.statusCode}');
+      }
     }
   }
 
-  Future<void> _register() async {
-    if (_formKey.currentState!.validate()) {
-      String uname = nameController.text;
-      String uemail = emailController.text;
-      String pass = passwordController.text;
-      String phn = cellController.text;
-      String addr = addressController.text;
-      String gender = selectedGender ?? 'Other'; // Default to 'Other' if null
+  // HTTP POST Request to send data to backend
+  Future<http.Response> _sendDataToBackend(
+      String name,
+      String email,
+      String password,
+      String cell,
+      String address,
+      String gender,
+      String dob,
+      ) async {
 
-      User user = User(
-        name: uname,
-        email: uemail,
-        password: pass,
-        cell: phn,
-        address: addr,
-        dob: null,
-        gender: gender,
-      );
-
-      var url = Uri.parse('https://99f5-103-205-69-6.ngrok-free.app/register');
-
-      var body = json.encode(user.toJson());
-
-      var response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: body,
-      );
-
-      if (response.statusCode == 200) {
-        print('User registered successfully: ${response.body}');
-      } else {
-        print('Failed to register user: ${response.statusCode}');
-      }
-    }
+    const String url = 'http://localhost:8089/register'; // Android emulator
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'name': name,
+        'email': email,
+        'password': password,
+        'cell': cell,
+        'address': address,
+        'gender': gender,
+        'dob': dob,
+      }),
+    );
+    return response;
   }
 
 
@@ -83,80 +123,93 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 32.0),
+        padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextField(
-                  controller: nameController,
+                  controller: name,
                   decoration: const InputDecoration(
-                    labelText: 'Full Name',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.person),
-                  ),
+                      labelText: 'Full Name',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.person)),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(
+                  height: 20,
+                ),
                 TextField(
-                  controller: emailController,
+                  controller: email,
                   decoration: const InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.email),
-                  ),
+                      labelText: 'Email ',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.email)),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(
+                  height: 20,
+                ),
                 TextField(
-                  controller: passwordController,
+                  controller: password,
+                  decoration: const InputDecoration(
+                      labelText: 'Password ',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.lock)
+                  ),
                   obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.password),
-                  ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(
+                  height: 20,
+                ),
                 TextField(
-                  controller: confirmPasswordController,
+                  controller: confirmPassword,
+                  decoration: const InputDecoration(
+                      labelText: 'Confirm Password ',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.lock)
+                  ),
                   obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Confirm Password',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.password),
-                  ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(
+                  height: 20,
+                ),
                 TextField(
-                  controller: cellController,
+                  controller: cell,
                   decoration: const InputDecoration(
-                    labelText: 'Cell Number',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.phone),
-                  ),
+                      labelText: 'Cell Number',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.phone)),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(
+                  height: 20,
+                ),
                 TextField(
-                  controller: addressController,
+                  controller: address,
                   decoration: const InputDecoration(
-                    labelText: 'Address',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.maps_home_work_rounded),
-                  ),
+                      labelText: 'Address',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.maps_home_work_rounded)),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(
+                  height: 20,
+                ),
+
                 DateTimeFormField(
                   decoration: const InputDecoration(labelText: 'Date of Birth'),
                   mode: DateTimeFieldPickerMode.date,
+                  pickerPlatform: dob,
                   onChanged: (DateTime? value) {
                     setState(() {
-                      dob = value;
+                      selectedDOB = value;
                     });
                   },
                 ),
-                const SizedBox(height: 20),
+
+                const SizedBox(
+                  height: 20,
+                ),
+
                 Row(
                   children: [
                     const Text('Gender:'),
@@ -199,7 +252,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             value: 'Other',
                             groupValue: selectedGender,
                             onChanged: (String? value) {
-                              setState(() {
+                              setState((){
                                 selectedGender = value;
                               });
                             },
@@ -210,28 +263,45 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
-                    _pickImage();
-                  },
-                  child: Text("Pick Image"),
+                    onPressed: () {
+                      _register();
+                    },
+                    child: Text(
+                      "Registration",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontFamily:GoogleFonts.lato().fontFamily
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      foregroundColor: Colors.white,
+                    )
                 ),
+
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _register,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: Text(
-                    "Register",
+
+                // Login Text Button
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Loginpage()),
+                    );
+                  },
+                  child: const Text(
+                    'Login',
                     style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontFamily: GoogleFonts.lato().fontFamily,
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
                     ),
                   ),
-                ),
+                )
+
+
+
+
               ],
             ),
           ),
