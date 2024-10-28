@@ -101,7 +101,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       String dob,
       ) async {
 
-    const String url = 'http://localhost:8089/register'; // Android emulator
+    const String url = 'https://5ede-103-205-69-3.ngrok-free.app/register'; // Android emulator
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
@@ -267,16 +267,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     onPressed: () {
                       _register();
                     },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      foregroundColor: Colors.white,
+                    ),
                     child: Text(
                       "Registration",
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontFamily:GoogleFonts.lato().fontFamily
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
-                      foregroundColor: Colors.white,
                     )
                 ),
 
