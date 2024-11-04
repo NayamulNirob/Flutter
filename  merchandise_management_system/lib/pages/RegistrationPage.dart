@@ -106,6 +106,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const Text(
+                  'Registration Form', // Your heading text
+                  style: TextStyle(
+                    fontSize: 24, // Size of the heading
+                    fontWeight: FontWeight.bold, // Bold style
+                    color: Colors.black, // Color of the text
+                  ),
+                ),
+                const SizedBox(height: 20),
                 TextField(
                   controller: name,
                   decoration: const InputDecoration(
@@ -239,6 +248,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                   ],
                 ),
+                const SizedBox(
+                  height: 40,
+                ),
                 ElevatedButton(
                     onPressed: () {
                       _register();
@@ -259,7 +271,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 const SizedBox(height: 20),
 
                 // Login Text Button
-                TextButton(
+                ElevatedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -270,7 +282,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     'Login',
                     style: TextStyle(
                       color: Colors.blue,
-                      decoration: TextDecoration.underline,
+                      decoration: TextDecoration.none,
                     ),
                   ),
                 )
