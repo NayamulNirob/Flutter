@@ -15,31 +15,31 @@ class Loginpage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
               controller: email,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Email',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.email)
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             TextField(
               controller: password,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Password',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.password)
               ),
               obscureText: true,
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             ElevatedButton(onPressed: (){
@@ -47,6 +47,10 @@ class Loginpage extends StatelessWidget {
               String pass =password.text;
               print('Email: $em, Password $pass');
             },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueAccent,
+                foregroundColor: Colors.white
+              ),
               child: Text(
               "Login",
                style: TextStyle(
@@ -55,12 +59,8 @@ class Loginpage extends StatelessWidget {
                ),
 
             ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-                foregroundColor: Colors.white
-              ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             ElevatedButton(
