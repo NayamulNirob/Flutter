@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:merchandise_management_system/models/Product.dart';
 import 'package:merchandise_management_system/models/SubCategories.dart';
 import 'package:merchandise_management_system/models/Supplier.dart';
@@ -43,42 +44,50 @@ class ProductService {
   Future<Product?> saveProduct(Product product, XFile? imageFile) async {
     final formData = FormData();
 
-    // Add product data
-
+    // Add product data as JSON string
     formData.fields.add(MapEntry('product', jsonEncode(product.toJson())));
 
-    // Add image if present
+    // Add image if present, with explicit content type
     if (imageFile != null) {
       final bytes = await imageFile.readAsBytes();
-      formData.files.add(MapEntry('imageFile', MultipartFile.fromBytes(
-        bytes,
-        filename: imageFile.name,
-      )));
+      formData.files.add(
+        MapEntry(
+          'imageFile',
+          MultipartFile.fromBytes(
+            bytes,
+            filename: imageFile.name,
+            contentType: MediaType('image', 'jpeg'), // Specify content type
+          ),
+        ),
+      );
     }
 
     final token = await authService.getToken();
-    final headers = {'Authorization': 'Bearer $token'};
+    final headers = {
+      'Authorization': 'Bearer $token',
+      // No need to manually set Content-Type as `Dio` handles it
+    };
 
-    // Send request
     try {
       final response = await _dio.post(
         '${baseUrl}/product/save',
-        data: formData
+        data: formData,
+        // options: Options(headers: headers), // Set headers here
       );
 
       if (response.statusCode == 200) {
         final data = response.data as Map<String, dynamic>;
-        return Product.fromJson(data); // Parse response data to Hotel object
+        return Product.fromJson(data); // Parse response data to Product object
       } else {
         print('Error creating product: ${response.statusCode}');
         return null;
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       print('Error creating product: ${e.message}');
       return null;
     }
-
   }
+
 
   Future<void> updateProduct(Product product, int id) async {
     final response = await http.put(
