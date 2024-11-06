@@ -38,37 +38,45 @@ class ProductService {
     }
   }
 
-  Future<Product> saveProduct(Product product, XFile? imageFile) async {
-    final uri = Uri.parse('$baseUrl/save');
-    var request = http.MultipartRequest('POST', uri);
+  Future<Product?> saveProduct(Product product, XFile? imageFile) async {
     final formData = FormData();
 
     // Add product data
-    request.fields['product'] = jsonEncode(product.toJson());
+
     formData.fields.add(MapEntry('product', jsonEncode(product.toJson())));
 
     // Add image if present
     if (imageFile != null) {
-      var imageStream = http.ByteStream(imageFile.openRead());
-      var imageLength = await imageFile.length();
-
-      request.files.add(http.MultipartFile(
-        'imageFile',
-        imageStream,
-        imageLength,
-        filename: imageFile.path.split('/').last,
-      ));
+      final bytes = await imageFile.readAsBytes();
+      formData.files.add(MapEntry('imageFile', MultipartFile.fromBytes(
+        bytes,
+        filename: imageFile.name,
+      )));
     }
+
+    final token = await authService.getToken();
+    final headers = {'Authorization': 'Bearer $token'};
 
     // Send request
-    final streamedResponse = await request.send();
-    final response = await http.Response.fromStream(streamedResponse);
+    try {
+      final response = await _dio.post(
+        '${baseUrl}/save',
+        data: formData,
+        options: Options(headers: headers),
+      );
 
-    if (response.statusCode == 201) {
-      return Product.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to save product');
+      if (response.statusCode == 200) {
+        final data = response.data as Map<String, dynamic>;
+        return Product.fromJson(data); // Parse response data to Hotel object
+      } else {
+        print('Error creating hotel: ${response.statusCode}');
+        return null;
+      }
+    } on DioError catch (e) {
+      print('Error creating hotel: ${e.message}');
+      return null;
     }
+
   }
 
   Future<void> updateProduct(Product product, int id) async {

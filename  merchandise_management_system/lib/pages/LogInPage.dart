@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:merchandise_management_system/pages/RegistrationPage.dart';
+import 'package:merchandise_management_system/services/AuthService.dart';
 
 
 class Loginpage extends StatelessWidget {
@@ -10,6 +12,36 @@ class Loginpage extends StatelessWidget {
 
   final TextEditingController email=TextEditingController();
   final TextEditingController password =TextEditingController();
+
+  final store =new FlutterSecureStorage();
+  AuthService authService = AuthService();
+
+  Future<void>loginUser(BuildContext context)async{
+
+    try{
+      final response =await authService.login(email.text, password.text);
+
+      final role = await authService.getUserRole();
+
+     print(role);
+      // if(role== 'ADMIN'){
+      //   Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(builder: (context)=>AdminPage()),
+      //   );
+      // }else if(role=='USER'){
+      //   Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(builder: (context)=>UserPage()),
+      //   );
+      // }else {
+      //   print('Unknown role: $role');
+      // }
+
+    }catch (error) {
+      print('Login failed: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
