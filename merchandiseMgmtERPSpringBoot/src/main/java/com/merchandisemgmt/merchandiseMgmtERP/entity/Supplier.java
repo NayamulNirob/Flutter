@@ -29,7 +29,9 @@ public class Supplier {
     private String status;
     private String organization;
 
-
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "supplier",fetch = FetchType.LAZY)
+//    private List<Product> products;
 
     @ManyToOne
     @JoinColumn

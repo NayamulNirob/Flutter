@@ -254,6 +254,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ElevatedButton(
                     onPressed: () {
                       _register();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Loginpage()));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blueAccent,

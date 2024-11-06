@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:typed_data';
-import 'package:intl/intl.dart';
 import 'package:merchandise_management_system/models/Product.dart';
 import 'package:merchandise_management_system/models/SubCategories.dart';
 import 'package:merchandise_management_system/services/ProductService.dart';
@@ -33,6 +32,32 @@ class _AddProductPageState extends State<AddProductPage> {
   final TextEditingController _sizesController = TextEditingController();
 
   DateTime _purchaseDate = DateTime.now();
+  Supplier? _selectedSupplier;
+  SubCategories? _selectedsubCategories;
+
+
+  List<Supplier>_suppliers=[];
+  List<SubCategories>_subCategories=[];
+
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    try {
+      final suppliers = await ProductService().fetchSuppliers();
+      final subCategories = await ProductService().fetchSubCategories();
+      setState(() {
+        _suppliers = suppliers;
+        _subCategories = subCategories;
+      });
+    } catch (e) {
+      print("Error loading data: $e");
+    }
+  }
 
   Future<void> _pickImage() async {
     try {
@@ -67,8 +92,8 @@ class _AddProductPageState extends State<AddProductPage> {
         totalPrice: double.parse(_totalPriceController.text),
         image: '',
         sizes: _sizesController.text,
-        supplier: Supplier(id: 0, name: 'Default Supplier',contactPerson: 'Default ContactPerson',email: 'Default Email',phone: 'Default Phone',address: 'Default Address',createdAt: DateFormat.d(),updatedAt: DateFormat.d(),status: '',organization: '', country: null,), // Replace as needed
-        subCategories: SubCategories(id: 0, name: 'Default Category',productCategory: null), // Replace as needed
+        supplier: _selectedSupplier!, // Replace as needed
+        subCategories: _selectedsubCategories!, // Replace as needed
         productCode: '',
       );
 
@@ -186,6 +211,44 @@ class _AddProductPageState extends State<AddProductPage> {
               if (_imageData != null)
                 Image.memory(_imageData!, height: 150, fit: BoxFit.cover),
               SizedBox(height: 16),
+
+              DropdownButtonFormField<Supplier>(
+                value: _selectedSupplier,
+                hint: Text('Select Supplier'),
+                onChanged: (Supplier? value) {
+                  setState(() {
+                    _selectedSupplier = value;
+                  });
+                },
+                items: _suppliers.map((Supplier supplier) {
+                  return DropdownMenuItem<Supplier>(
+                    value: supplier,
+                    child: Text(supplier.name),
+                  );
+                }).toList(),
+                validator: (value) =>
+                value == null ? 'Please select a supplier' : null,
+              ),
+
+              DropdownButtonFormField<SubCategories>(
+                value: _selectedsubCategories,
+                hint: Text('Select Sub-Category'),
+                onChanged: (SubCategories? value) {
+                  setState(() {
+                    _selectedsubCategories = value;
+                  });
+                },
+                items: _subCategories.map((SubCategories category) {
+                  return DropdownMenuItem<SubCategories>(
+                    value: category,
+                    child: Text(category.name),
+                  );
+                }).toList(),
+                validator: (value) =>
+                value == null ? 'Please select a sub-category' : null,
+              ),
+
+
               ElevatedButton(
                 onPressed: _saveProduct,
                 child: Text('Save Product'),

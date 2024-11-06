@@ -69,7 +69,7 @@ public class AuthService {
 
 
     public AuthenticationResponse register(User user) throws IOException {
-//            , MultipartFile imageFile
+         //, MultipartFile imageFile
         // Check if the user already exists
         if (userRepository.findByEmail(user.getUsername()).isPresent()) {
             return new AuthenticationResponse(null, "User already exists", null);

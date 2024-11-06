@@ -3,6 +3,8 @@ import 'package:dio/dio.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:merchandise_management_system/models/Product.dart';
+import 'package:merchandise_management_system/models/SubCategories.dart';
+import 'package:merchandise_management_system/models/Supplier.dart';
 import 'package:merchandise_management_system/services/AuthService.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -13,11 +15,11 @@ class ProductService {
 
   final AuthService authService =AuthService();
 
-  final String baseUrl='http://localhost:8089/api/product';
+  final String baseUrl='http://localhost:8089/api';
 
 
   Future<List<Product>> getAllProducts() async {
-    final response = await http.get(Uri.parse('$baseUrl/'));
+    final response = await http.get(Uri.parse('$baseUrl/product/'));
     print(response.statusCode);
 
     if (response.statusCode == 200) {
@@ -29,7 +31,7 @@ class ProductService {
   }
 
   Future<Product> getProductById(int id) async {
-    final response = await http.get(Uri.parse('$baseUrl/$id'));
+    final response = await http.get(Uri.parse('$baseUrl/product/$id'));
 
     if (response.statusCode == 200) {
       return Product.fromJson(jsonDecode(response.body));
@@ -60,20 +62,19 @@ class ProductService {
     // Send request
     try {
       final response = await _dio.post(
-        '${baseUrl}/save',
-        data: formData,
-        options: Options(headers: headers),
+        '${baseUrl}/product/save',
+        data: formData
       );
 
       if (response.statusCode == 200) {
         final data = response.data as Map<String, dynamic>;
         return Product.fromJson(data); // Parse response data to Hotel object
       } else {
-        print('Error creating hotel: ${response.statusCode}');
+        print('Error creating product: ${response.statusCode}');
         return null;
       }
     } on DioError catch (e) {
-      print('Error creating hotel: ${e.message}');
+      print('Error creating product: ${e.message}');
       return null;
     }
 
@@ -81,7 +82,7 @@ class ProductService {
 
   Future<void> updateProduct(Product product, int id) async {
     final response = await http.put(
-      Uri.parse('$baseUrl/update/$id'),
+      Uri.parse('$baseUrl/product/update/$id'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(product.toJson()),
     );
@@ -92,10 +93,30 @@ class ProductService {
   }
 
   Future<void> deleteProduct(int id) async {
-    final response = await http.delete(Uri.parse('$baseUrl/delete/$id'));
+    final response = await http.delete(Uri.parse('$baseUrl/product/delete/$id'));
 
     if (response.statusCode != 200) {
       throw Exception('Failed to delete product');
+    }
+  }
+
+  Future<List<Supplier>> fetchSuppliers() async {
+    final response = await http.get(Uri.parse('$baseUrl/supplier/'));
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse.map((data) => Supplier.fromJson(data)).toList();
+    } else {
+      throw Exception('Failed to load suppliers');
+    }
+  }
+
+  Future<List<SubCategories>> fetchSubCategories() async {
+    final response = await http.get(Uri.parse('$baseUrl/subcategories/'));
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse.map((data) => SubCategories.fromJson(data)).toList();
+    } else {
+      throw Exception('Failed to load subcategories');
     }
   }
 }

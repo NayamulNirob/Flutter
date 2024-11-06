@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:merchandise_management_system/pages/AddProduct.dart';
 import 'package:merchandise_management_system/pages/RegistrationPage.dart';
 import 'package:merchandise_management_system/services/AuthService.dart';
 
@@ -78,6 +79,9 @@ class Loginpage extends StatelessWidget {
               String em = email.text;
               String pass =password.text;
               print('Email: $em, Password $pass');
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddProductPage()));
             },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
@@ -89,6 +93,7 @@ class Loginpage extends StatelessWidget {
                  fontWeight: FontWeight.w600,
                  fontFamily: GoogleFonts.lato().fontFamily
                ),
+
 
             ),
             ),
@@ -109,7 +114,26 @@ class Loginpage extends StatelessWidget {
                   decoration: TextDecoration.none,
                 ),
               ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddProductPage()),
+                );
+              },
+              child: const Text(
+                'Add Product',
+                style: TextStyle(
+                  color: Colors.blue,
+                  decoration: TextDecoration.none,
+                ),
+              ),
             )
+
           ],
         ),
       ),

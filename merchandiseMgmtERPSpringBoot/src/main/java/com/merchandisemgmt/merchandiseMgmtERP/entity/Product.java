@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.security.SecureRandom;
 import java.sql.Date;
-
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -70,9 +71,15 @@ public class Product {
 
 
 
+
+//    @JsonBackReference
     @ManyToOne
     @JoinColumn
     private Supplier supplier;
+
+//    @JsonManagedReference
+//    @OneToMany(fetch = FetchType.EAGER)
+//    private List<InventoryItem> inventoryItemList;
 
     @ManyToOne
     @JoinColumn
