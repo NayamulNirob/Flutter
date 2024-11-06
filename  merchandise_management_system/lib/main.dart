@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:merchandise_management_system/pages/LogInPage.dart';
-import 'package:merchandise_management_system/pages/RegistrationPage.dart';
 
 void main() {
   runApp(const MyApp());

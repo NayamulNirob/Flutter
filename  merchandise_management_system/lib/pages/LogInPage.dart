@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:merchandise_management_system/pages/AddProduct.dart';
 import 'package:merchandise_management_system/pages/RegistrationPage.dart';
 import 'package:merchandise_management_system/services/AuthService.dart';
@@ -14,8 +12,10 @@ class Loginpage extends StatelessWidget {
   final TextEditingController email=TextEditingController();
   final TextEditingController password =TextEditingController();
 
-  final store =new FlutterSecureStorage();
+  final store =const FlutterSecureStorage();
   AuthService authService = AuthService();
+
+  Loginpage({super.key});
 
   Future<void>loginUser(BuildContext context)async{
 
@@ -81,7 +81,7 @@ class Loginpage extends StatelessWidget {
               print('Email: $em, Password $pass');
               Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AddProductPage()));
+                  MaterialPageRoute(builder: (context) => const AddProductPage()));
             },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
@@ -104,7 +104,7 @@ class Loginpage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RegistrationPage()),
+                  MaterialPageRoute(builder: (context) => const RegistrationPage()),
                 );
               },
               child: const Text(
@@ -115,14 +115,14 @@ class Loginpage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AddProductPage()),
+                  MaterialPageRoute(builder: (context) => const AddProductPage()),
                 );
               },
               child: const Text(

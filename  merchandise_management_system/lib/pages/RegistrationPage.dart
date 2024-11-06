@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:merchandise_management_system/pages/LogInPage.dart';
 
 class RegistrationPage extends StatefulWidget {
+  const RegistrationPage({super.key});
+
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:merchandise_management_system/models/Product.dart';
@@ -70,7 +69,7 @@ class ProductService {
 
     try {
       final response = await _dio.post(
-        '${baseUrl}/product/save',
+        '$baseUrl/product/save',
         data: formData,
         // options: Options(headers: headers), // Set headers here
       );

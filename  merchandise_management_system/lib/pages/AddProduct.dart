@@ -8,7 +8,7 @@ import 'package:merchandise_management_system/services/ProductService.dart';
 import '../models/Supplier.dart';
 
 class AddProductPage extends StatefulWidget {
-  const AddProductPage({Key? key}) : super(key: key);
+  const AddProductPage({super.key});
 
   @override
   State<AddProductPage> createState() => _AddProductPageState();
@@ -31,7 +31,7 @@ class _AddProductPageState extends State<AddProductPage> {
   final TextEditingController _totalPriceController = TextEditingController();
   final TextEditingController _sizesController = TextEditingController();
 
-  DateTime _purchaseDate = DateTime.now();
+  final DateTime _purchaseDate = DateTime.now();
   Supplier? _selectedSupplier;
   SubCategories? _selectedsubCategories;
 
@@ -100,7 +100,7 @@ class _AddProductPageState extends State<AddProductPage> {
       try {
         await ProductService().saveProduct(product, _imageFile);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Product added successfully!')),
+          const SnackBar(content: Text('Product added successfully!')),
         );
 
         // Clear form fields and reset image
@@ -124,7 +124,7 @@ class _AddProductPageState extends State<AddProductPage> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please complete the form and upload an image.')),
+        const SnackBar(content: Text('Please complete the form and upload an image.')),
       );
     }
   }
@@ -132,7 +132,7 @@ class _AddProductPageState extends State<AddProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Add New Product')),
+      appBar: AppBar(title: const Text('Add New Product')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -141,34 +141,34 @@ class _AddProductPageState extends State<AddProductPage> {
             children: [
               TextFormField(
                 controller: _nameController,
-                decoration: InputDecoration(labelText: 'Product Name'),
+                decoration: const InputDecoration(labelText: 'Product Name'),
                 validator: (value) =>
                 value == null || value.isEmpty ? 'Enter product name' : null,
               ),
               TextFormField(
                 controller: _descriptionController,
-                decoration: InputDecoration(labelText: 'Description'),
+                decoration: const InputDecoration(labelText: 'Description'),
                 validator: (value) =>
                 value == null || value.isEmpty ? 'Enter description' : null,
               ),
               TextFormField(
                 controller: _priceController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Price'),
+                decoration: const InputDecoration(labelText: 'Price'),
                 validator: (value) =>
                 value == null || value.isEmpty ? 'Enter price' : null,
               ),
               TextFormField(
                 controller: _quantityController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Quantity'),
+                decoration: const InputDecoration(labelText: 'Quantity'),
                 validator: (value) =>
                 value == null || value.isEmpty ? 'Enter quantity' : null,
               ),
               TextFormField(
                 controller: _taxController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Tax'),
+                decoration: const InputDecoration(labelText: 'Tax'),
                 validator: (value) => value == null || value.isEmpty
                     ? 'Enter tax amount'
                     : null,
@@ -176,45 +176,45 @@ class _AddProductPageState extends State<AddProductPage> {
               TextFormField(
                 controller: _paidController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Paid Amount'),
+                decoration: const InputDecoration(labelText: 'Paid Amount'),
                 validator: (value) =>
                 value == null || value.isEmpty ? 'Enter paid amount' : null,
               ),
               TextFormField(
                 controller: _dueController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Due Amount'),
+                decoration: const InputDecoration(labelText: 'Due Amount'),
                 validator: (value) =>
                 value == null || value.isEmpty ? 'Enter due amount' : null,
               ),
               TextFormField(
                 controller: _totalPriceController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Total Price'),
+                decoration: const InputDecoration(labelText: 'Total Price'),
                 validator: (value) => value == null || value.isEmpty
                     ? 'Enter total price'
                     : null,
               ),
               TextFormField(
                 controller: _sizesController,
-                decoration: InputDecoration(labelText: 'Sizes'),
+                decoration: const InputDecoration(labelText: 'Sizes'),
                 validator: (value) => value == null || value.isEmpty
                     ? 'Enter available sizes'
                     : null,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextButton.icon(
-                icon: Icon(Icons.image),
-                label: Text('Upload Image'),
+                icon: const Icon(Icons.image),
+                label: const Text('Upload Image'),
                 onPressed: _pickImage,
               ),
               if (_imageData != null)
                 Image.memory(_imageData!, height: 150, fit: BoxFit.cover),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               DropdownButtonFormField<Supplier>(
                 value: _selectedSupplier,
-                hint: Text('Select Supplier'),
+                hint: const Text('Select Supplier'),
                 onChanged: (Supplier? value) {
                   setState(() {
                     _selectedSupplier = value;
@@ -232,7 +232,7 @@ class _AddProductPageState extends State<AddProductPage> {
 
               DropdownButtonFormField<SubCategories>(
                 value: _selectedsubCategories,
-                hint: Text('Select Sub-Category'),
+                hint: const Text('Select Sub-Category'),
                 onChanged: (SubCategories? value) {
                   setState(() {
                     _selectedsubCategories = value;
@@ -251,7 +251,7 @@ class _AddProductPageState extends State<AddProductPage> {
 
               ElevatedButton(
                 onPressed: _saveProduct,
-                child: Text('Save Product'),
+                child: const Text('Save Product'),
               ),
             ],
           ),
