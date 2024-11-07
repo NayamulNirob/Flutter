@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:merchandise_management_system/models/Product.dart';
 import 'package:merchandise_management_system/models/SubCategories.dart';
 import 'package:merchandise_management_system/services/ProductService.dart';
-
 import '../models/Supplier.dart';
 
 class AddProductPage extends StatefulWidget {
