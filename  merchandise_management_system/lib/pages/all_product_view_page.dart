@@ -108,7 +108,7 @@ class _AllProductViewPageState extends State<AllProductViewPage> {
                            ),
                            SizedBox(height: 5),
                            Text(
-                             'Available: ${product.productCode}', // Added "Available" text
+                             'productCode: ${product.productCode  ?? 'Unknown'}', // Added "Available" text
                              style: TextStyle(
                                fontSize: 14,
                                color: Colors.green,
@@ -120,7 +120,7 @@ class _AllProductViewPageState extends State<AllProductViewPage> {
                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                              children: [
                                Text(
-                                 '\$${product.price}',
+                                 '\$${product.price?.toStringAsFixed(2) ?? '0.00'}',
                                  style: TextStyle(
                                    fontSize: 18,
                                    fontWeight: FontWeight.w600,
