@@ -5,6 +5,7 @@ import 'package:merchandise_management_system/pages/AddProduct.dart';
 import 'package:merchandise_management_system/pages/ProductViewPage.dart';
 import 'package:merchandise_management_system/pages/RegistrationPage.dart';
 import 'package:merchandise_management_system/pages/all_product_view_page.dart';
+import 'package:merchandise_management_system/pages/countries_view_page.dart';
 import 'package:merchandise_management_system/services/AuthService.dart';
 
 
@@ -173,6 +174,24 @@ class Loginpage extends StatelessWidget {
               ),
             ),
 
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CountriesViewPage()),
+                );
+              },
+              child: const Text(
+                'Country View Page',
+                style: TextStyle(
+                  color: Colors.blue,
+                  decoration: TextDecoration.none,
+                ),
+              ),
+            ),
           ],
         ),
       ),
