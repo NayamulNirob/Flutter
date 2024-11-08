@@ -165,7 +165,7 @@ class Loginpage extends StatelessWidget {
                 );
               },
               child: const Text(
-                'View Product',
+                'View Product with ID',
                 style: TextStyle(
                   color: Colors.blue,
                   decoration: TextDecoration.none,
