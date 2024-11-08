@@ -4,6 +4,7 @@ import 'package:intl/intl.dart'; // Import intl for DateFormat
 import 'SubCategories.dart';
 import 'Supplier.dart';
 
+
 class Product {
   final int id;
   final String name;
@@ -52,25 +53,34 @@ class Product {
     ).join();
   }
 
+
+
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
-      price: json['price'].toDouble(),
-      purchaseDate: DateTime.parse(json['purchaseDate']),
-      quantity: json['quantity'],
-      tax: json['tax'].toDouble(),
-      paid: json['paid'].toDouble(),
-      due: json['due'].toDouble(),
-      totalPrice: json['totalPrice'].toDouble(),
-      image: json['image'],
-      sizes: json['sizes'],
-      productCode:json['productCode'],
-      supplier: Supplier.fromJson(json['supplier']),
-      subCategories: SubCategories.fromJson(json['subCategories']),
+      id: json['id'] ?? 0, // Provide default value for missing ID
+      name: json['name'] ?? 'Unnamed Product', // Default to avoid null
+      description: json['description'] ?? 'No description available', // Default if null
+      price: (json['price'] ?? 0).toDouble(),
+      purchaseDate: json['purchaseDate'] != null
+          ? DateTime.parse(json['purchaseDate'])
+          : DateTime.now(),
+      quantity: json['quantity'] ?? 0,
+      tax: (json['tax'] ?? 0).toDouble(),
+      paid: (json['paid'] ?? 0).toDouble(),
+      due: (json['due'] ?? 0).toDouble(),
+      totalPrice: (json['totalPrice'] ?? 0).toDouble(),
+      image: json['image'] ?? 'assets/placeholder.png', // Placeholder if null
+      sizes: json['sizes'] ?? '',
+      productCode: json['productCode'] ?? 'N/A', // Default if null
+      supplier: Supplier.fromJson(json['supplier'] ?? {}),
+      subCategories: SubCategories.fromJson(json['subCategories'] ?? {}),
     );
+
   }
+
+
+
+
 
   Map<String, dynamic> toJson() {
     return {

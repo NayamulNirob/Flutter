@@ -18,12 +18,15 @@ class ProductService {
   final String baseUrl='http://localhost:8089/api';
 
 
-  Future<List<Product>> getAllProducts() async {
+  Future<List<Product>> fetchProducts() async {
     final response = await http.get(Uri.parse('$baseUrl/product/'));
     print(response.statusCode);
 
     if (response.statusCode == 200) {
       List<dynamic> jsonData = jsonDecode(response.body);
+      jsonData.forEach((json) {
+        print('Fetched product data: $json');
+      });
       return jsonData.map((json) => Product.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load products');
