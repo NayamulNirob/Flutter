@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:merchandise_management_system/pages/AddProduct.dart';
 import 'package:merchandise_management_system/pages/RegistrationPage.dart';
 import 'package:merchandise_management_system/pages/User_page.dart';
 import 'package:merchandise_management_system/pages/admin_page.dart';
-import 'package:merchandise_management_system/pages/all_product_view_page.dart';
-import 'package:merchandise_management_system/pages/countries_view_page.dart';
 import 'package:merchandise_management_system/services/AuthService.dart';
 
 

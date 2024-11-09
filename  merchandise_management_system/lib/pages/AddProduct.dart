@@ -1,10 +1,14 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:typed_data';
 import 'package:merchandise_management_system/models/Product.dart';
 import 'package:merchandise_management_system/models/SubCategories.dart';
 import 'package:merchandise_management_system/services/ProductService.dart';
 import '../models/Supplier.dart';
+import 'package:http/http.dart' as http;
 
 class AddProductPage extends StatefulWidget {
   const AddProductPage({super.key});
@@ -18,6 +22,7 @@ class _AddProductPageState extends State<AddProductPage> {
   final ImagePicker _picker = ImagePicker();
   XFile? _imageFile;
   Uint8List? _imageData;
+  File? selectedImage;
 
   // Controllers for form fields
   final TextEditingController _nameController = TextEditingController();
@@ -32,12 +37,9 @@ class _AddProductPageState extends State<AddProductPage> {
 
   final DateTime _purchaseDate = DateTime.now();
   Supplier? _selectedSupplier;
-  SubCategories? _selectedsubCategories;
-
-
-  List<Supplier>_suppliers=[];
-  List<SubCategories>_subCategories=[];
-
+  SubCategories? _selectedSubCategory;
+  List<Supplier> _suppliers = [];
+  List<SubCategories> _subCategories = [];
 
   @override
   void initState() {
@@ -60,15 +62,13 @@ class _AddProductPageState extends State<AddProductPage> {
 
   Future<void> _pickImage() async {
     try {
-      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-      if (pickedFile != null) {
-        final bytes = await pickedFile.readAsBytes();
+      final XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedImage != null) {
         setState(() {
-          _imageFile = pickedFile;
-          _imageData = bytes;
+          selectedImage = File(pickedImage.path);
         });
       }
-    }catch (e) {
+    } catch (e) {
       print('Error picking image: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error picking image: ${e.toString()}')),
@@ -77,7 +77,7 @@ class _AddProductPageState extends State<AddProductPage> {
   }
 
   Future<void> _saveProduct() async {
-    if (_formKey.currentState!.validate() && _imageFile != null) {
+    if (_formKey.currentState!.validate() && selectedImage != null) {
       final product = Product(
         id: 0,
         name: _nameController.text,
@@ -91,32 +91,40 @@ class _AddProductPageState extends State<AddProductPage> {
         totalPrice: double.parse(_totalPriceController.text),
         image: '',
         sizes: _sizesController.text,
-        supplier: _selectedSupplier!, // Replace as needed
-        subCategories: _selectedsubCategories!, // Replace as needed
+        supplier: _selectedSupplier!,
+        subCategories: _selectedSubCategory!,
         productCode: '',
       );
 
-      try {
-        await ProductService().saveProduct(product, _imageFile);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Product added successfully!')),
-        );
+      var uri = Uri.parse('http://10.0.2.2/api/product/save');
+      var request = http.MultipartRequest('POST', uri);
 
-        // Clear form fields and reset image
-        _nameController.clear();
-        _descriptionController.clear();
-        _priceController.clear();
-        _quantityController.clear();
-        _taxController.clear();
-        _paidController.clear();
-        _dueController.clear();
-        _totalPriceController.clear();
-        _sizesController.clear();
-        _imageFile = null;
-        _imageData = null;
-        setState(() {});
+      request.files.add(
+        http.MultipartFile.fromString(
+          'product',
+          jsonEncode(product.toJson()), // Ensure toJson() is implemented in Product model
+          contentType: MediaType('application', 'json'),
+        ),
+      );
+
+      if (selectedImage != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath('avatar', selectedImage!.path),
+        );
+      }
+
+      try {
+        var response = await request.send();
+        if (response.statusCode == 200) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Product added successfully!')),
+          );
+          _clearForm();
+        } else {
+          print('Failed to register. Status code: ${response.statusCode}');
+        }
       } catch (e) {
-        print(e);
+        print('Error occurred while submitting: $e');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error adding product: ${e.toString()}')),
         );
@@ -126,6 +134,21 @@ class _AddProductPageState extends State<AddProductPage> {
         const SnackBar(content: Text('Please complete the form and upload an image.')),
       );
     }
+  }
+
+  void _clearForm() {
+    _nameController.clear();
+    _descriptionController.clear();
+    _priceController.clear();
+    _quantityController.clear();
+    _taxController.clear();
+    _paidController.clear();
+    _dueController.clear();
+    _totalPriceController.clear();
+    _sizesController.clear();
+    _imageFile = null;
+    _imageData = null;
+    setState(() {});
   }
 
   @override
@@ -141,65 +164,53 @@ class _AddProductPageState extends State<AddProductPage> {
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(labelText: 'Product Name'),
-                validator: (value) =>
-                value == null || value.isEmpty ? 'Enter product name' : null,
+                validator: (value) => value == null || value.isEmpty ? 'Enter product name' : null,
               ),
               TextFormField(
                 controller: _descriptionController,
                 decoration: const InputDecoration(labelText: 'Description'),
-                validator: (value) =>
-                value == null || value.isEmpty ? 'Enter description' : null,
+                validator: (value) => value == null || value.isEmpty ? 'Enter description' : null,
               ),
               TextFormField(
                 controller: _priceController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(labelText: 'Price'),
-                validator: (value) =>
-                value == null || value.isEmpty ? 'Enter price' : null,
+                validator: (value) => value == null || value.isEmpty ? 'Enter price' : null,
               ),
               TextFormField(
                 controller: _quantityController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(labelText: 'Quantity'),
-                validator: (value) =>
-                value == null || value.isEmpty ? 'Enter quantity' : null,
+                validator: (value) => value == null || value.isEmpty ? 'Enter quantity' : null,
               ),
               TextFormField(
                 controller: _taxController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(labelText: 'Tax'),
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Enter tax amount'
-                    : null,
+                validator: (value) => value == null || value.isEmpty ? 'Enter tax amount' : null,
               ),
               TextFormField(
                 controller: _paidController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(labelText: 'Paid Amount'),
-                validator: (value) =>
-                value == null || value.isEmpty ? 'Enter paid amount' : null,
+                validator: (value) => value == null || value.isEmpty ? 'Enter paid amount' : null,
               ),
               TextFormField(
                 controller: _dueController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(labelText: 'Due Amount'),
-                validator: (value) =>
-                value == null || value.isEmpty ? 'Enter due amount' : null,
+                validator: (value) => value == null || value.isEmpty ? 'Enter due amount' : null,
               ),
               TextFormField(
                 controller: _totalPriceController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(labelText: 'Total Price'),
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Enter total price'
-                    : null,
+                validator: (value) => value == null || value.isEmpty ? 'Enter total price' : null,
               ),
               TextFormField(
                 controller: _sizesController,
                 decoration: const InputDecoration(labelText: 'Sizes'),
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Enter available sizes'
-                    : null,
+                validator: (value) => value == null || value.isEmpty ? 'Enter available sizes' : null,
               ),
               const SizedBox(height: 16),
               TextButton.icon(
@@ -210,7 +221,6 @@ class _AddProductPageState extends State<AddProductPage> {
               if (_imageData != null)
                 Image.memory(_imageData!, height: 150, fit: BoxFit.cover),
               const SizedBox(height: 16),
-
               DropdownButtonFormField<Supplier>(
                 value: _selectedSupplier,
                 hint: const Text('Select Supplier'),
@@ -225,16 +235,14 @@ class _AddProductPageState extends State<AddProductPage> {
                     child: Text(supplier.name),
                   );
                 }).toList(),
-                validator: (value) =>
-                value == null ? 'Please select a supplier' : null,
+                validator: (value) => value == null ? 'Please select a supplier' : null,
               ),
-
               DropdownButtonFormField<SubCategories>(
-                value: _selectedsubCategories,
+                value: _selectedSubCategory,
                 hint: const Text('Select Sub-Category'),
                 onChanged: (SubCategories? value) {
                   setState(() {
-                    _selectedsubCategories = value;
+                    _selectedSubCategory = value;
                   });
                 },
                 items: _subCategories.map((SubCategories category) {
@@ -243,11 +251,8 @@ class _AddProductPageState extends State<AddProductPage> {
                     child: Text(category.name),
                   );
                 }).toList(),
-                validator: (value) =>
-                value == null ? 'Please select a sub-category' : null,
+                validator: (value) => value == null ? 'Please select a sub-category' : null,
               ),
-
-
               ElevatedButton(
                 onPressed: _saveProduct,
                 child: const Text('Save Product'),
