@@ -29,7 +29,7 @@ class _AllCountryViewPageState extends State<CountriesViewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Available Merchant',
+        title: Text('All Business Countries',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -44,7 +44,7 @@ class _AllCountryViewPageState extends State<CountriesViewPage> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No Merchant available'));
+            return Center(child: Text('No business available'));
           } else {
             return ListView.builder(
               padding: EdgeInsets.all(10),
@@ -76,7 +76,7 @@ class _AllCountryViewPageState extends State<CountriesViewPage> {
                             ),
                             SizedBox(height: 5),
                             Text(
-                              country.business ?? 'No category available',
+                              '\$${country.business ?? 'No category available' }' ,
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.grey[600],
@@ -103,17 +103,13 @@ class _AllCountryViewPageState extends State<CountriesViewPage> {
                                     color: Colors.indigo,
                                   ),
                                 ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    print('Order this food item: ${country.status}');
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.deepOrangeAccent,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
+                                Text(
+                                  '\$${country.status}',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.indigo,
                                   ),
-                                  child: Text('Order Now'),
                                 ),
                               ],
                             ),

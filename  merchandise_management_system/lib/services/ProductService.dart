@@ -25,7 +25,7 @@ class ProductService {
     if (response.statusCode == 200) {
       List<dynamic> jsonData = jsonDecode(response.body);
       jsonData.forEach((json) {
-        print('Fetched product data: $json');
+        // print('Fetched product data: $json');
       });
       return jsonData.map((json) => Product.fromJson(json)).toList();
     } else {

@@ -10,18 +10,21 @@ class AllProductViewPage extends StatefulWidget {
 }
 
 class _AllProductViewPageState extends State<AllProductViewPage> {
- late Future<List<Product>>futureProducts;
+  late Future<List<Product>> futureProducts;
 
  @override
   void initState() {
     super.initState();
     futureProducts=ProductService().fetchProducts();
+
+
     // Print the fetched products once they are loaded
-    futureProducts.then((products) {
-      print(products); // This will print the list of products once the future completes
-    }).catchError((error) {
-      print('Error fetching products: $error');
-    });
+    // futureProducts.then((products) {
+    //   print(products); // This will print the list of products once the future completes
+    // }).catchError((error) {
+    //   print('Error fetching products: $error');
+    // });
+
   }
 
  @override

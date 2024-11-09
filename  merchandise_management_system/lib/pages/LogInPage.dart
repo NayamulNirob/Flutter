@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:merchandise_management_system/pages/AddProduct.dart';
-import 'package:merchandise_management_system/pages/ProductViewPage.dart';
 import 'package:merchandise_management_system/pages/RegistrationPage.dart';
+import 'package:merchandise_management_system/pages/User_page.dart';
+import 'package:merchandise_management_system/pages/admin_page.dart';
 import 'package:merchandise_management_system/pages/all_product_view_page.dart';
 import 'package:merchandise_management_system/pages/countries_view_page.dart';
 import 'package:merchandise_management_system/services/AuthService.dart';
@@ -18,7 +19,7 @@ class Loginpage extends StatelessWidget {
   final store =const FlutterSecureStorage();
   AuthService authService = AuthService();
 
-  Loginpage({super.key});
+
 
   Future<void>loginUser(BuildContext context)async{
 
@@ -28,19 +29,19 @@ class Loginpage extends StatelessWidget {
       final role = await authService.getUserRole();
 
      print(role);
-      // if(role== 'ADMIN'){
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(builder: (context)=>AdminPage()),
-      //   );
-      // }else if(role=='USER'){
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(builder: (context)=>UserPage()),
-      //   );
-      // }else {
-      //   print('Unknown role: $role');
-      // }
+      if(role== 'ADMIN'){
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context)=>AdminPage()),
+        );
+      }else if(role=='USER'){
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context)=>UserPage()),
+        );
+      }else {
+        print('Unknown role: $role');
+      }
 
     }catch (error) {
       print('Login failed: $error');
@@ -81,10 +82,9 @@ class Loginpage extends StatelessWidget {
             ElevatedButton(onPressed: (){
               String em = email.text;
               String pass =password.text;
+              loginUser(context);
               print('Email: $em, Password $pass');
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AddProductPage()));
+
             },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
@@ -96,9 +96,8 @@ class Loginpage extends StatelessWidget {
                  fontWeight: FontWeight.w600,
                  fontFamily: GoogleFonts.lato().fontFamily
                ),
-
-
             ),
+
             ),
             const SizedBox(
               height: 20,
@@ -118,80 +117,7 @@ class Loginpage extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AddProductPage()),
-                );
-              },
-              child: const Text(
-                'Add Product',
-                style: TextStyle(
-                  color: Colors.blue,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AllProductViewPage()),
-                );
-              },
-              child: const Text(
-                'View Product',
-                style: TextStyle(
-                  color: Colors.blue,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-            ),
 
-            const SizedBox(
-              height: 20,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProductViewPage(productId: 9)),
-                );
-              },
-              child: const Text(
-                'View Product with ID',
-                style: TextStyle(
-                  color: Colors.blue,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 20,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CountriesViewPage()),
-                );
-              },
-              child: const Text(
-                'Country View Page',
-                style: TextStyle(
-                  color: Colors.blue,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-            ),
           ],
         ),
       ),
