@@ -22,9 +22,9 @@ class CountryService {
 
     if (response.statusCode == 200) {
       List<dynamic> jsonData = jsonDecode(response.body);
-      jsonData.forEach((json) {
+      for (var json in jsonData) {
         print('Fetched Country data: $json');
-      });
+      }
       return jsonData.map((json) => Country.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load Countries');

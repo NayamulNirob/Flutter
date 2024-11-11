@@ -16,6 +16,8 @@ class Loginpage extends StatelessWidget {
   final store =const FlutterSecureStorage();
   AuthService authService = AuthService();
 
+  Loginpage({super.key});
+
 
 
   Future<void>loginUser(BuildContext context)async{
@@ -29,12 +31,12 @@ class Loginpage extends StatelessWidget {
       if(role== 'ADMIN'){
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context)=>AdminPage()),
+          MaterialPageRoute(builder: (context)=>const AdminPage()),
         );
       }else if(role=='USER'){
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context)=>UserPage()),
+          MaterialPageRoute(builder: (context)=>const UserPage()),
         );
       }else {
         print('Unknown role: $role');

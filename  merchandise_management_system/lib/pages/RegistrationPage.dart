@@ -1,9 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:date_field/date_field.dart';
 import 'package:http/http.dart' as http;
-import 'package:merchandise_management_system/pages/LogInPage.dart';
 
 import 'dart:io';
 import 'package:http_parser/http_parser.dart';
@@ -390,7 +387,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
+            const Center(
               child: Text(
                 "Registration",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -494,13 +491,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
             const SizedBox(
               height: 10,
             ),
-            Text("Gender"),
+            const Text("Gender"),
             const SizedBox(
               height: 10,
             ),
             RadioGroup(
               controller: genderController,
-              values: ["Male", "Female", "Others"],
+              values: const ["Male", "Female", "Others"],
               indexOfDefault: 0,
               orientation: RadioGroupOrientation.horizontal,
               decoration: RadioGroupDecoration(
@@ -515,8 +512,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
               height: 10,
             ),
             ElevatedButton.icon(
-              icon: Icon(Icons.image),
-              label: Text('Pick Avatar'),
+              icon: const Icon(Icons.image),
+              label: const Text('Pick Avatar'),
               onPressed: pickImage,
             ),
             const SizedBox(

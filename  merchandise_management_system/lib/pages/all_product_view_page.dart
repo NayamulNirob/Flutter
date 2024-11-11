@@ -31,7 +31,7 @@ class _AllProductViewPageState extends State<AllProductViewPage> {
  Widget build(BuildContext context) {
    return Scaffold(
      appBar: AppBar(
-       title: Text('All Available Merchant',
+       title: const Text('All Available Merchant',
          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
        ),
        centerTitle: true,
@@ -42,20 +42,20 @@ class _AllProductViewPageState extends State<AllProductViewPage> {
        future: futureProducts,
        builder: (BuildContext context, AsyncSnapshot<List<Product>> snapshot) {
          if (snapshot.connectionState == ConnectionState.waiting) {
-           return Center(child: CircularProgressIndicator());
+           return const Center(child: CircularProgressIndicator());
          } else if (snapshot.hasError) {
            return Center(child: Text('Error: ${snapshot.error}'));
          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-           return Center(child: Text('No Merchant available'));
+           return const Center(child: Text('No Merchant available'));
          } else {
            return ListView.builder(
-             padding: EdgeInsets.all(10),
+             padding: const EdgeInsets.all(10),
              itemCount: snapshot.data!.length,
              itemBuilder: (context, index) {
                final product = snapshot.data![index];
                return Card(
                  elevation: 5,
-                 margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                 margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                  shape: RoundedRectangleBorder(
                    borderRadius: BorderRadius.circular(15),
                  ),
@@ -64,7 +64,7 @@ class _AllProductViewPageState extends State<AllProductViewPage> {
                    children: [
                      // Image with rounded corners and shadow
                      ClipRRect(
-                       borderRadius: BorderRadius.vertical(
+                       borderRadius: const BorderRadius.vertical(
                          top: Radius.circular(15),
                        ),
                        child: product.image != null
@@ -95,13 +95,13 @@ class _AllProductViewPageState extends State<AllProductViewPage> {
                          children: [
                            Text(
                              product.name ?? 'Unnamed Food',
-                             style: TextStyle(
+                             style: const TextStyle(
                                fontSize: 20,
                                fontWeight: FontWeight.bold,
                                color: Colors.deepOrange,
                              ),
                            ),
-                           SizedBox(height: 5),
+                           const SizedBox(height: 5),
                            Text(
                              product.description ?? 'No category available',
                              style: TextStyle(
@@ -109,22 +109,22 @@ class _AllProductViewPageState extends State<AllProductViewPage> {
                                color: Colors.grey[600],
                              ),
                            ),
-                           SizedBox(height: 5),
+                           const SizedBox(height: 5),
                            Text(
                              'productCode: ${product.productCode  ?? 'Unknown'}', // Added "Available" text
-                             style: TextStyle(
+                             style: const TextStyle(
                                fontSize: 14,
                                color: Colors.green,
                                fontWeight: FontWeight.w500,
                              ),
                            ),
-                           SizedBox(height: 10),
+                           const SizedBox(height: 10),
                            Row(
                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                              children: [
                                Text(
-                                 '\$${product.price?.toStringAsFixed(2) ?? '0.00'}',
-                                 style: TextStyle(
+                                 '\$${product.price.toStringAsFixed(2) ?? '0.00'}',
+                                 style: const TextStyle(
                                    fontSize: 18,
                                    fontWeight: FontWeight.w600,
                                    color: Colors.indigo,
@@ -140,7 +140,7 @@ class _AllProductViewPageState extends State<AllProductViewPage> {
                                      borderRadius: BorderRadius.circular(20),
                                    ),
                                  ),
-                                 child: Text('Order Now'),
+                                 child: const Text('Order Now'),
                                ),
                              ],
                            ),

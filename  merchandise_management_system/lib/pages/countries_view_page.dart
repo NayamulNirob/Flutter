@@ -29,7 +29,7 @@ class _AllCountryViewPageState extends State<CountriesViewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Business Countries',
+        title: const Text('All Business Countries',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -40,20 +40,20 @@ class _AllCountryViewPageState extends State<CountriesViewPage> {
         future: futureCountries,
         builder: (BuildContext context, AsyncSnapshot<List<Country>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No business available'));
+            return const Center(child: Text('No business available'));
           } else {
             return ListView.builder(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 final country = snapshot.data![index];
                 return Card(
                   elevation: 5,
-                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -68,13 +68,13 @@ class _AllCountryViewPageState extends State<CountriesViewPage> {
                           children: [
                             Text(
                               country.name ?? 'Unnamed Food',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.deepOrange,
                               ),
                             ),
-                            SizedBox(height: 5),
+                            const SizedBox(height: 5),
                             Text(
                               '\$${country.business ?? 'No category available' }' ,
                               style: TextStyle(
@@ -82,22 +82,22 @@ class _AllCountryViewPageState extends State<CountriesViewPage> {
                                 color: Colors.grey[600],
                               ),
                             ),
-                            SizedBox(height: 5),
+                            const SizedBox(height: 5),
                             Text(
                               'countrySale: ${country.sale  ?? 'Unknown'}', // Added "Available" text
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 14,
                                 color: Colors.green,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   '\$${country.progress  }',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.indigo,
@@ -105,7 +105,7 @@ class _AllCountryViewPageState extends State<CountriesViewPage> {
                                 ),
                                 Text(
                                   '\$${country.status}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.indigo,

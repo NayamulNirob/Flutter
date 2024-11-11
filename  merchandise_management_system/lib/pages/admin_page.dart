@@ -13,7 +13,7 @@ class AdminPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Admin Dashboard'),
+        title: const Text('Admin Dashboard'),
         automaticallyImplyLeading: false, // Hides the back button
         backgroundColor: Colors.blueAccent,
       ),
@@ -22,7 +22,7 @@ class AdminPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
+            const Text(
               'Welcome, Admin!',
               style: TextStyle(
                 fontSize: 24,
@@ -31,10 +31,10 @@ class AdminPage extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton.icon(
-              icon: Icon(Icons.people),
-              label: Text('View Users'),
+              icon: const Icon(Icons.people),
+              label: const Text('View Users'),
               onPressed: () {
                 // Navigate to users page or call an API to fetch users
                 print("View Users clicked");
@@ -43,10 +43,10 @@ class AdminPage extends StatelessWidget {
                 backgroundColor: Colors.blueAccent,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ElevatedButton.icon(
-              icon: Icon(Icons.production_quantity_limits_rounded),
-              label: Text('Manage Products'),
+              icon: const Icon(Icons.production_quantity_limits_rounded),
+              label: const Text('Manage Products'),
               onPressed: () {
                 // Navigate to manage hotels page or call an API to manage hotels
                 print("Manage Hotels clicked");
@@ -55,29 +55,29 @@ class AdminPage extends StatelessWidget {
                 backgroundColor: Colors.blueAccent,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
 
 
             ElevatedButton.icon(
-              icon: Icon(Icons.add),
-              label: Text('Add Products'),
+              icon: const Icon(Icons.add),
+              label: const Text('Add Products'),
               onPressed: () {
                 // Implement logout functionality or navigate back to login
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => AddProductPage()),
+                  MaterialPageRoute(builder: (context) => const AddProductPage()),
                 ); // Example logout: navigate back to login
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
 
 
             ElevatedButton.icon(
-              icon: Icon(Icons.settings),
-              label: Text('Settings'),
+              icon: const Icon(Icons.settings),
+              label: const Text('Settings'),
               onPressed: () {
                 // Navigate to settings page
                 print("Settings clicked");
@@ -112,7 +112,7 @@ class AdminPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CountriesViewPage()),
+                  MaterialPageRoute(builder: (context) => const CountriesViewPage()),
                 );
               },
               child: const Text(
@@ -123,7 +123,7 @@ class AdminPage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 // Implement logout functionality or navigate back to login
@@ -132,10 +132,10 @@ class AdminPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => Loginpage()),
                 ); // Example logout: navigate back to login
               },
-              child: Text('Logout'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.redAccent,
               ),
+              child: const Text('Logout'),
             ),
           ],
         ),
