@@ -1,7 +1,7 @@
 class Country {
   final int id;
   final String name;
-  final String? business;
+  final String? bussiness;
   final String? progress;
   final String? status;
   final double sale;
@@ -9,7 +9,7 @@ class Country {
   Country({
     required this.id,
     required this.name,
-    this.business,
+    this.bussiness,
     this.progress,
     this.status,
     required this.sale,
@@ -19,7 +19,7 @@ class Country {
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,
-    'business': business,
+    'bussiness': bussiness,
     'progress': progress,
     'status': status,
     'sale': sale,
@@ -30,7 +30,7 @@ class Country {
     return Country(
       id: json['id'],
       name: json['name'],
-      business: json['business'],
+      bussiness: json['bussiness'],
       progress: json['progress'],
       status: json['status'],
       sale: json['sale'],

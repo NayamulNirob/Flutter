@@ -19,7 +19,7 @@ class _AllCountryViewPageState extends State<CountriesViewPage> {
     futureCountries=CountryService().fetchCountries();
     // Print the fetched countries once they are loaded
     futureCountries.then((countries) {
-      print(countries); // This will print the list of countries once the future completes
+      // print(countries); // This will print the list of countries once the future completes
     }).catchError((error) {
       print('Error fetching countries: $error');
     });
@@ -67,7 +67,7 @@ class _AllCountryViewPageState extends State<CountriesViewPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              country.name ?? 'Unnamed Food',
+                              country.name ?? 'Unnamed Country',
                               style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -76,7 +76,7 @@ class _AllCountryViewPageState extends State<CountriesViewPage> {
                             ),
                             const SizedBox(height: 5),
                             Text(
-                              '\$${country.business ?? 'No category available' }' ,
+                             'Country Business: ${country.bussiness ?? 'Failed to load Business'}',
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.grey[600],

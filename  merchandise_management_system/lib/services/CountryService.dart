@@ -23,7 +23,7 @@ class CountryService {
     if (response.statusCode == 200) {
       List<dynamic> jsonData = jsonDecode(response.body);
       for (var json in jsonData) {
-        print('Fetched Country data: $json');
+        // print('Fetched Country data: $json');
       }
       return jsonData.map((json) => Country.fromJson(json)).toList();
     } else {

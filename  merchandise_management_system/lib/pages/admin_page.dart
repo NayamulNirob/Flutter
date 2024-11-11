@@ -13,7 +13,7 @@ class AdminPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin Dashboard'),
+        title: const Text('Admin Dashboard',style: TextStyle(color: Colors.white)),
         automaticallyImplyLeading: false, // Hides the back button
         backgroundColor: Colors.blueAccent,
       ),
@@ -33,8 +33,8 @@ class AdminPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ElevatedButton.icon(
-              icon: const Icon(Icons.people),
-              label: const Text('View Users'),
+              icon: const Icon(Icons.people,color: Colors.white,),
+              label: const Text('View Users',style: TextStyle(color: Colors.white)),
               onPressed: () {
                 // Navigate to users page or call an API to fetch users
                 print("View Users clicked");
@@ -45,11 +45,15 @@ class AdminPage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             ElevatedButton.icon(
-              icon: const Icon(Icons.production_quantity_limits_rounded),
-              label: const Text('Manage Products'),
+              icon: const Icon(Icons.production_quantity_limits_rounded,color: Colors.white,),
+              label: const Text('Manage Products',style: TextStyle(color: Colors.white)),
               onPressed: () {
                 // Navigate to manage hotels page or call an API to manage hotels
-                print("Manage Hotels clicked");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AllProductViewPage()),
+                );
+                print("Manage Products clicked");
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
@@ -59,8 +63,8 @@ class AdminPage extends StatelessWidget {
 
 
             ElevatedButton.icon(
-              icon: const Icon(Icons.add),
-              label: const Text('Add Products'),
+              icon: const Icon(Icons.add,color: Colors.white,),
+              label: const Text('Add Products',style: TextStyle(color: Colors.white)),
               onPressed: () {
                 // Implement logout functionality or navigate back to login
                 Navigator.pushReplacement(
@@ -76,8 +80,8 @@ class AdminPage extends StatelessWidget {
 
 
             ElevatedButton.icon(
-              icon: const Icon(Icons.settings),
-              label: const Text('Settings'),
+              icon: const Icon(Icons.settings,color: Colors.white,),
+              label: const Text('Settings',style: TextStyle(color: Colors.white)),
               onPressed: () {
                 // Navigate to settings page
                 print("Settings clicked");
@@ -86,45 +90,29 @@ class AdminPage extends StatelessWidget {
                 backgroundColor: Colors.blueAccent,
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AllProductViewPage()),
-                );
-              },
-              child: const Text(
-                'View all Product',
-                style: TextStyle(
-                  color: Colors.blue,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-            ),
 
             const SizedBox(
               height: 20,
             ),
-            ElevatedButton(
+            ElevatedButton.icon(
+              icon: const Icon(Icons.map_outlined,color: Colors.white,),
+              label: const Text('Country View Page',style: TextStyle(color: Colors.white),),
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const CountriesViewPage()),
                 );
               },
-              child: const Text(
-                'Country View Page',
-                style: TextStyle(
-                  color: Colors.blue,
-                  decoration: TextDecoration.none,
-                ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueAccent,
               ),
+
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
+            ElevatedButton.icon(
+              icon: const Icon(Icons.logout,color: Colors.white,),
+              label: const Text('Logout',style: TextStyle(color: Colors.white),),
+
               onPressed: () {
                 // Implement logout functionality or navigate back to login
                 Navigator.pushReplacement(
@@ -133,9 +121,8 @@ class AdminPage extends StatelessWidget {
                 ); // Example logout: navigate back to login
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent,
+                backgroundColor: Colors.purple,
               ),
-              child: const Text('Logout'),
             ),
           ],
         ),
