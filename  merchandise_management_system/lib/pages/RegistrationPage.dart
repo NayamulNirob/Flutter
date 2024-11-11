@@ -1,11 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'dart:io';
+
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:merchandise_management_system/pages/LogInPage.dart';
 import 'package:radio_group_v2/radio_group_v2.dart';
 import 'package:flutter/foundation.dart' show Uint8List, kIsWeb;
 
@@ -22,19 +24,17 @@ class RegistrationPage extends StatefulWidget {
 
 class _RegistrationPageState extends State<RegistrationPage> {
 
-  final TextEditingController name = TextEditingController();
+  final TextEditingController name = TextEditingController()..text='Test';
 
-  final TextEditingController email = TextEditingController();
+  final TextEditingController email = TextEditingController()..text='test@test.test';
 
-  final TextEditingController password = TextEditingController();
+  final TextEditingController password = TextEditingController()..text='123456';
 
-  final TextEditingController confirmPassword = TextEditingController();
+  final TextEditingController confirmPassword = TextEditingController()..text='123456';
 
-  final TextEditingController cell = TextEditingController();
+  final TextEditingController cell = TextEditingController()..text='123456';
 
-  final TextEditingController address = TextEditingController();
-
-  // final DateTimeFieldPickerPlatform dob= DateTimeFieldPickerPlatform.material;
+  final TextEditingController address = TextEditingController()..text='Dhaka, bangladesg';
 
   final TextEditingController dob = TextEditingController()
     ..text = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -45,9 +45,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   DateTime? selectedDate;
 
-  final _formKey = GlobalKey<FormState>();
 
-  File? selectedImage;
+
+  XFile? selectedImage;
   final ImagePicker _picker = ImagePicker();
 
   Future<void> pickImage() async {
@@ -55,12 +55,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
     await _picker.pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
       setState(() {
-        selectedImage = File(pickedImage.path);
+        selectedImage = XFile(pickedImage.path);
       });
     }
   }
 
-  Future<void> submitRegistration() async {
+  Future<bool> submitRegistration() async {
     final user = {
       'gender': genderController.value,
       'name': name.text,
@@ -74,6 +74,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     var uri = Uri.parse('http://localhost:8089/register');
     var request = http.MultipartRequest('POST', uri);
 
+
     request.files.add(
       http.MultipartFile.fromString(
         'user',
@@ -82,301 +83,69 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
     );
 
+    // if (selectedImage != null) {
+    //   if (kIsWeb) {
+    //     // For web, read the image as bytes and send it directly.
+    //     Uint8List imageBytes = await selectedImage!.readAsBytes();
+    //     request.files.add(
+    //       http.MultipartFile.fromBytes(
+    //         'avatar',
+    //         imageBytes,
+    //         filename: 'avatar.png',
+    //         contentType: MediaType('image', 'png'),
+    //       ),
+    //     );
+    //   } else {
+    //     // For mobile, use fromPath.
+    //     request.files.add(
+    //       await http.MultipartFile.fromPath(
+    //         'avatar',
+    //         selectedImage!.path,
+    //         contentType: MediaType('image', 'png'),
+    //       ),
+    //     );
+    //   }
+    // }
+
     if (selectedImage != null) {
-      if (!kIsWeb && Platform.isAndroid || Platform.isIOS) {
+      if (kIsWeb) {
         // For web, read the image as bytes and send it directly.
-        Uint8List imageBytes = await selectedImage!.readAsBytes();
         request.files.add(
-          http.MultipartFile.fromBytes(
-            'avatar',
-            imageBytes,
-            filename: 'avatar.png',
-            contentType: MediaType('image', 'png'),
+          http.MultipartFile.fromString(
+            'user',
+            jsonEncode(user),
+            contentType: MediaType('application', 'json'),
           ),
         );
       } else {
         // For mobile, use fromPath.
         request.files.add(
           await http.MultipartFile.fromPath(
-            'avatar',
-            selectedImage!.path,
-            contentType: MediaType('image', 'png'),
+            'test',
+            selectedImage!.path
           ),
         );
       }
     }
 
 
+
     try {
       var response = await request.send();
       if (response.statusCode == 200) {
         print('Registration successful');
+        return true;
       } else {
         print('Failed to register. Status code: ${response.statusCode}');
+        return false;
       }
     } catch (e) {
       print('Error occurred while submitting: $e');
+      return false;
     }
   }
 
 
-  // Method to validate form and check passwords
-  // void _register() async {
-  //
-  //   if (_formKey.currentState!.validate()) {
-  //     String uName = name.text;
-  //     String uEmail = email.text;
-  //     String uPassword = password.text;
-  //     String uCell = cell.text;
-  //     String uAddress = address.text;
-  //     String uGender = selectedGender ?? 'Other';
-  //     String uDob = selectedDOB != null ? selectedDOB!.toIso8601String() : '';
-  //
-  //     // Send data to the server
-  //     final response = await _sendDataToBackend(uName, uEmail, uPassword, uCell, uAddress, uGender, uDob);
-  //
-  //     if (response.statusCode == 201 || response.statusCode == 200  ) {
-  //       // Registration successful
-  //       print('Registration successful!');
-  //     } else if (response.statusCode == 409) {
-  //       // User already exists
-  //       print('User already exists!');
-  //     } else {
-  //       print('Registration failed with status: ${response.statusCode}');
-  //     }
-  //   }
-  // }
-
-  // HTTP POST Request to send data to backend
-  Future<http.Response> _sendDataToBackend(
-      String name,
-      String email,
-      String password,
-      String cell,
-      String address,
-      String gender,
-      String dob,
-      ) async {
-
-    const String url = 'http://localhost:8089/register'; // Android emulator
-    final response = await http.post(
-      Uri.parse(url),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'name': name,
-        'email': email,
-        'password': password,
-        'cell': cell,
-        'address': address,
-        'gender': gender,
-        'dob': dob,
-      }),
-    );
-    return response;
-  }
-
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     body: Padding(
-  //       padding: const EdgeInsets.all(16),
-  //       child: SingleChildScrollView(
-  //         child: Form(
-  //           key: _formKey,
-  //           child: Column(
-  //             mainAxisAlignment: MainAxisAlignment.center,
-  //             children: [
-  //               const Text(
-  //                 'Registration Form', // Your heading text
-  //                 style: TextStyle(
-  //                   fontSize: 24, // Size of the heading
-  //                   fontWeight: FontWeight.bold, // Bold style
-  //                   color: Colors.black, // Color of the text
-  //                 ),
-  //               ),
-  //               const SizedBox(height: 20),
-  //               TextField(
-  //                 controller: name,
-  //                 decoration: const InputDecoration(
-  //                     labelText: 'Full Name',
-  //                     border: OutlineInputBorder(),
-  //                     prefixIcon: Icon(Icons.person)),
-  //               ),
-  //               const SizedBox(
-  //                 height: 20,
-  //               ),
-  //               TextField(
-  //                 controller: email,
-  //                 decoration: const InputDecoration(
-  //                     labelText: 'Email ',
-  //                     border: OutlineInputBorder(),
-  //                     prefixIcon: Icon(Icons.email)),
-  //               ),
-  //               const SizedBox(
-  //                 height: 20,
-  //               ),
-  //               TextField(
-  //                 controller: password,
-  //                 decoration: const InputDecoration(
-  //                     labelText: 'Password ',
-  //                     border: OutlineInputBorder(),
-  //                     prefixIcon: Icon(Icons.lock)
-  //                 ),
-  //                 obscureText: true,
-  //               ),
-  //               const SizedBox(
-  //                 height: 20,
-  //               ),
-  //               TextField(
-  //                 controller: confirmPassword,
-  //                 decoration: const InputDecoration(
-  //                     labelText: 'Confirm Password ',
-  //                     border: OutlineInputBorder(),
-  //                     prefixIcon: Icon(Icons.lock)
-  //                 ),
-  //                 obscureText: true,
-  //               ),
-  //               const SizedBox(
-  //                 height: 20,
-  //               ),
-  //               TextField(
-  //                 controller: cell,
-  //                 decoration: const InputDecoration(
-  //                     labelText: 'Cell Number',
-  //                     border: OutlineInputBorder(),
-  //                     prefixIcon: Icon(Icons.phone)),
-  //               ),
-  //               const SizedBox(
-  //                 height: 20,
-  //               ),
-  //               TextField(
-  //                 controller: address,
-  //                 decoration: const InputDecoration(
-  //                     labelText: 'Address',
-  //                     border: OutlineInputBorder(),
-  //                     prefixIcon: Icon(Icons.maps_home_work_rounded)),
-  //               ),
-  //               const SizedBox(
-  //                 height: 20,
-  //               ),
-  //
-  //               DateTimeFormField(
-  //                 decoration: const InputDecoration(labelText: 'Date of Birth'),
-  //                 mode: DateTimeFieldPickerMode.date,
-  //                 pickerPlatform: dob,
-  //                 onChanged: (DateTime? value) {
-  //                   setState(() {
-  //                     selectedDOB = value;
-  //                   });
-  //                 },
-  //               ),
-  //
-  //               const SizedBox(
-  //                 height: 20,
-  //               ),
-  //
-  //               Row(
-  //                 children: [
-  //                   const Text('Gender:'),
-  //                   Expanded(
-  //                     child: Row(
-  //                       children: [
-  //                         Radio<String>(
-  //                           value: 'Male',
-  //                           groupValue: selectedGender,
-  //                           onChanged: (String? value) {
-  //                             setState(() {
-  //                               selectedGender = value;
-  //                             });
-  //                           },
-  //                         ),
-  //                         const Text('Male'),
-  //                       ],
-  //                     ),
-  //                   ),
-  //                   Expanded(
-  //                     child: Row(
-  //                       children: [
-  //                         Radio<String>(
-  //                           value: 'Female',
-  //                           groupValue: selectedGender,
-  //                           onChanged: (String? value) {
-  //                             setState(() {
-  //                               selectedGender = value;
-  //                             });
-  //                           },
-  //                         ),
-  //                         const Text('Female'),
-  //                       ],
-  //                     ),
-  //                   ),
-  //                   Expanded(
-  //                     child: Row(
-  //                       children: [
-  //                         Radio<String>(
-  //                           value: 'Other',
-  //                           groupValue: selectedGender,
-  //                           onChanged: (String? value) {
-  //                             setState((){
-  //                               selectedGender = value;
-  //                             });
-  //                           },
-  //                         ),
-  //                         const Text('Other'),
-  //                       ],
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //               const SizedBox(
-  //                 height: 40,
-  //               ),
-  //               ElevatedButton(
-  //                   onPressed: () {
-  //                     _register();
-  //                     Navigator.push(
-  //                         context,
-  //                         MaterialPageRoute(builder: (context) => Loginpage()));
-  //                   },
-  //                   style: ElevatedButton.styleFrom(
-  //                     backgroundColor: Colors.blueAccent,
-  //                     foregroundColor: Colors.white,
-  //                   ),
-  //                   child: Text(
-  //                     "Registration",
-  //                     style: TextStyle(
-  //                         fontWeight: FontWeight.w600,
-  //                         fontFamily:GoogleFonts.lato().fontFamily
-  //                     ),
-  //                   )
-  //               ),
-  //
-  //               const SizedBox(height: 20),
-  //
-  //               // Login Text Button
-  //               ElevatedButton(
-  //                 onPressed: () {
-  //                   Navigator.push(
-  //                     context,
-  //                     MaterialPageRoute(builder: (context) => Loginpage()),
-  //                   );
-  //                 },
-  //                 child: const Text(
-  //                   'Login',
-  //                   style: TextStyle(
-  //                     color: Colors.blue,
-  //                     decoration: TextDecoration.none,
-  //                   ),
-  //                 ),
-  //               )
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -519,16 +288,35 @@ class _RegistrationPageState extends State<RegistrationPage> {
             const SizedBox(
               height: 10,
             ),
+
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
               ),
-              onPressed: submitRegistration,
+              onPressed: () async {
+                bool isRegistered = await submitRegistration();
+                if (isRegistered) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Loginpage()),
+                  );
+                } else {
+                  // Show an error message or handle unsuccessful registration as needed.
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Registration failed. Please try again.')),
+                  );
+                }
+              },
               child: const Text(
-                "Registration",
-                style: TextStyle(color: Colors.white),
+                'Registration',
+                style: TextStyle(
+                  color: Colors.white,
+                  decoration: TextDecoration.none,
+                ),
               ),
             ),
+
+
           ],
         ),
       ),
