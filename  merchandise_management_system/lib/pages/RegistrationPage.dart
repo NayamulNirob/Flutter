@@ -113,6 +113,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
     try {
       var response = await request.send();
       if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration successful!')),
+        );
         print('Registration successful');
         return true;
       } else {
@@ -262,7 +265,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             ),
             ElevatedButton.icon(
               icon: const Icon(Icons.image),
-              label: const Text('Pick Avatar'),
+              label: const Text('Pick Image'),
               onPressed: pickImage,
             ),
             const SizedBox(

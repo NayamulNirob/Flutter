@@ -1,8 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'dart:typed_data';
 import 'package:merchandise_management_system/models/Product.dart';
 import 'package:merchandise_management_system/models/SubCategories.dart';
@@ -20,20 +21,21 @@ class AddProductPage extends StatefulWidget {
 class _AddProductPageState extends State<AddProductPage> {
   final _formKey = GlobalKey<FormState>();
   final ImagePicker _picker = ImagePicker();
-  XFile? _imageFile;
-  Uint8List? _imageData;
-  File? selectedImage;
+  XFile? selectedImage;
+  Uint8List? webImage;
+
+
 
   // Controllers for form fields
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _quantityController = TextEditingController();
-  final TextEditingController _taxController = TextEditingController();
-  final TextEditingController _paidController = TextEditingController();
-  final TextEditingController _dueController = TextEditingController();
-  final TextEditingController _totalPriceController = TextEditingController();
-  final TextEditingController _sizesController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController()..text='Women Floral Print Co-ord Set';
+  final TextEditingController _descriptionController = TextEditingController()..text='We introduce our self as a pioneer in the field of Womens Floral Print Co-ord Set. Elevate your look with our stunning 100% Viscose black floral print co-ord set.';
+  final TextEditingController _priceController = TextEditingController()..text='250';
+  final TextEditingController _quantityController = TextEditingController()..text='100';
+  final TextEditingController _taxController = TextEditingController()..text='10';
+  final TextEditingController _paidController = TextEditingController()..text='27500';
+  final TextEditingController _dueController = TextEditingController()..text='00000';
+  final TextEditingController _totalPriceController = TextEditingController()..text='27500';
+  final TextEditingController _sizesController = TextEditingController()..text='free';
 
   final DateTime _purchaseDate = DateTime.now();
   Supplier? _selectedSupplier;
@@ -60,24 +62,29 @@ class _AddProductPageState extends State<AddProductPage> {
     }
   }
 
-  Future<void> _pickImage() async {
-    try {
-      final XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+  Future<void> pickImage() async {
+    if (kIsWeb) {
+      // For Web: Use image_picker_web to pick image and store as bytes
+      var pickedImage = await ImagePickerWeb.getImageAsBytes();
       if (pickedImage != null) {
         setState(() {
-          selectedImage = File(pickedImage.path);
+          webImage = pickedImage; // Store the picked image as Uint8List
         });
       }
-    } catch (e) {
-      print('Error picking image: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error picking image: ${e.toString()}')),
-      );
+    } else {
+      // For Mobile: Use image_picker to pick image
+      final XFile? pickedImage =
+      await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedImage != null) {
+        setState(() {
+          selectedImage = pickedImage;
+        });
+      }
     }
   }
 
   Future<void> _saveProduct() async {
-    if (_formKey.currentState!.validate() && selectedImage != null) {
+    if (_formKey.currentState!.validate() && selectedImage != null || webImage != null) {
       final product = Product(
         id: 0,
         name: _nameController.text,
@@ -96,7 +103,7 @@ class _AddProductPageState extends State<AddProductPage> {
         productCode: '',
       );
 
-      var uri = Uri.parse('http://10.0.2.2/api/product/save');
+      var uri = Uri.parse('http://localhost:8089/api/product/save');
       var request = http.MultipartRequest('POST', uri);
 
       request.files.add(
@@ -107,15 +114,23 @@ class _AddProductPageState extends State<AddProductPage> {
         ),
       );
 
-      if (selectedImage != null) {
-        request.files.add(
-          await http.MultipartFile.fromPath('avatar', selectedImage!.path),
-        );
+      if (kIsWeb && webImage != null) {
+        request.files.add(http.MultipartFile.fromBytes(
+          'image',
+          webImage!,
+          filename: 'upload.jpg',
+          contentType: MediaType('image', 'jpeg'),
+        ));
+      } else if (selectedImage != null) {
+        request.files.add(await http.MultipartFile.fromPath(
+          'image',
+          selectedImage!.path,
+        ));
       }
 
       try {
         var response = await request.send();
-        if (response.statusCode == 200) {
+        if (response.statusCode == 200 || response.statusCode == 201) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Product added successfully!')),
           );
@@ -136,6 +151,7 @@ class _AddProductPageState extends State<AddProductPage> {
     }
   }
 
+
   void _clearForm() {
     _nameController.clear();
     _descriptionController.clear();
@@ -146,10 +162,43 @@ class _AddProductPageState extends State<AddProductPage> {
     _dueController.clear();
     _totalPriceController.clear();
     _sizesController.clear();
-    _imageFile = null;
-    _imageData = null;
+    selectedImage = null;
+    webImage = null;
     setState(() {});
   }
+
+  _calculate() {
+    setState(() {
+      double? price = double.tryParse(_priceController.text);
+      double? quantity = double.tryParse(_quantityController.text);
+      double baseTotalPrice = 0.0;
+
+      // Calculate base total price
+      if (price != null && quantity != null) {
+        baseTotalPrice = price * quantity;
+        _totalPriceController.text = baseTotalPrice.toStringAsFixed(2);
+      }
+
+      // Add tax to the total price
+      double? tax = double.tryParse(_taxController.text);
+      double finalTotalPrice = baseTotalPrice;
+      if (tax != null) {
+        finalTotalPrice += baseTotalPrice * (tax / 100);
+        _totalPriceController.text = finalTotalPrice.toStringAsFixed(2);
+      }
+
+      // Calculate due amount by subtracting paid from the final total price
+      double? paid = double.tryParse(_paidController.text);
+      if (paid != null) {
+        _dueController.text = (finalTotalPrice - paid).toStringAsFixed(2);
+      } else {
+        _dueController.text = finalTotalPrice.toStringAsFixed(2); // If no amount paid, full amount is due
+      }
+    });
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -173,28 +222,33 @@ class _AddProductPageState extends State<AddProductPage> {
               ),
               TextFormField(
                 controller: _priceController,
+                onChanged: (value) => _calculate(),
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(labelText: 'Price'),
                 validator: (value) => value == null || value.isEmpty ? 'Enter price' : null,
               ),
               TextFormField(
                 controller: _quantityController,
+                onChanged: (value) => _calculate(),
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(labelText: 'Quantity'),
                 validator: (value) => value == null || value.isEmpty ? 'Enter quantity' : null,
               ),
               TextFormField(
                 controller: _taxController,
+                onChanged: (value) => _calculate(),
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(labelText: 'Tax'),
                 validator: (value) => value == null || value.isEmpty ? 'Enter tax amount' : null,
               ),
               TextFormField(
                 controller: _paidController,
+                onChanged: (value) => _calculate(),
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(labelText: 'Paid Amount'),
                 validator: (value) => value == null || value.isEmpty ? 'Enter paid amount' : null,
               ),
+
               TextFormField(
                 controller: _dueController,
                 keyboardType: TextInputType.number,
@@ -213,13 +267,11 @@ class _AddProductPageState extends State<AddProductPage> {
                 validator: (value) => value == null || value.isEmpty ? 'Enter available sizes' : null,
               ),
               const SizedBox(height: 16),
-              TextButton.icon(
+              ElevatedButton.icon(
                 icon: const Icon(Icons.image),
-                label: const Text('Upload Image'),
-                onPressed: _pickImage,
+                label: const Text('Pick Image'),
+                onPressed: pickImage,
               ),
-              if (_imageData != null)
-                Image.memory(_imageData!, height: 150, fit: BoxFit.cover),
               const SizedBox(height: 16),
               DropdownButtonFormField<Supplier>(
                 value: _selectedSupplier,
