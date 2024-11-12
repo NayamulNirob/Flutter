@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:intl/intl.dart';
 import 'package:merchandise_management_system/pages/LogInPage.dart';
 import 'package:radio_group_v2/radio_group_v2.dart';
@@ -24,17 +24,17 @@ class RegistrationPage extends StatefulWidget {
 
 class _RegistrationPageState extends State<RegistrationPage> {
 
-  final TextEditingController name = TextEditingController()..text='Test';
+  final TextEditingController name = TextEditingController();
 
-  final TextEditingController email = TextEditingController()..text='test@test.test';
+  final TextEditingController email = TextEditingController();
 
-  final TextEditingController password = TextEditingController()..text='123456';
+  final TextEditingController password = TextEditingController();
 
-  final TextEditingController confirmPassword = TextEditingController()..text='123456';
+  final TextEditingController confirmPassword = TextEditingController();
 
-  final TextEditingController cell = TextEditingController()..text='123456';
+  final TextEditingController cell = TextEditingController();
 
-  final TextEditingController address = TextEditingController()..text='Dhaka, bangladesg';
+  final TextEditingController address = TextEditingController();
 
   final TextEditingController dob = TextEditingController()
     ..text = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -45,18 +45,30 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   DateTime? selectedDate;
 
-
-
   XFile? selectedImage;
+
+  Uint8List? webImage;
+
   final ImagePicker _picker = ImagePicker();
 
   Future<void> pickImage() async {
-    final XFile? pickedImage =
-    await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      setState(() {
-        selectedImage = XFile(pickedImage.path);
-      });
+    if (kIsWeb) {
+      // For Web: Use image_picker_web to pick image and store as bytes
+      var pickedImage = await ImagePickerWeb.getImageAsBytes();
+      if (pickedImage != null) {
+        setState(() {
+          webImage = pickedImage; // Store the picked image as Uint8List
+        });
+      }
+    } else {
+      // For Mobile: Use image_picker to pick image
+      final XFile? pickedImage =
+      await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedImage != null) {
+        setState(() {
+          selectedImage = pickedImage;
+        });
+      }
     }
   }
 
@@ -83,51 +95,19 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
     );
 
-    // if (selectedImage != null) {
-    //   if (kIsWeb) {
-    //     // For web, read the image as bytes and send it directly.
-    //     Uint8List imageBytes = await selectedImage!.readAsBytes();
-    //     request.files.add(
-    //       http.MultipartFile.fromBytes(
-    //         'avatar',
-    //         imageBytes,
-    //         filename: 'avatar.png',
-    //         contentType: MediaType('image', 'png'),
-    //       ),
-    //     );
-    //   } else {
-    //     // For mobile, use fromPath.
-    //     request.files.add(
-    //       await http.MultipartFile.fromPath(
-    //         'avatar',
-    //         selectedImage!.path,
-    //         contentType: MediaType('image', 'png'),
-    //       ),
-    //     );
-    //   }
-    // }
-
-    if (selectedImage != null) {
-      if (kIsWeb) {
-        // For web, read the image as bytes and send it directly.
-        request.files.add(
-          http.MultipartFile.fromString(
-            'user',
-            jsonEncode(user),
-            contentType: MediaType('application', 'json'),
-          ),
-        );
-      } else {
-        // For mobile, use fromPath.
-        request.files.add(
-          await http.MultipartFile.fromPath(
-            'test',
-            selectedImage!.path
-          ),
-        );
-      }
+    if (kIsWeb && webImage != null) {
+      request.files.add(http.MultipartFile.fromBytes(
+        'image',
+        webImage!,
+        filename: 'upload.jpg',
+        contentType: MediaType('image', 'jpeg'),
+      ));
+    } else if (selectedImage != null) {
+      request.files.add(await http.MultipartFile.fromPath(
+        'image',
+        selectedImage!.path,
+      ));
     }
-
 
 
     try {
@@ -303,7 +283,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 } else {
                   // Show an error message or handle unsuccessful registration as needed.
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Registration failed. Please try again.')),
+                    const SnackBar(content: Text('Registration failed. Please try again.')),
                   );
                 }
               },
