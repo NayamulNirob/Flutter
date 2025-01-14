@@ -22,7 +22,7 @@ class _SplashViewState extends State<SplashView> {
         floatingActionButton: FloatingActionButton(
           onPressed: ()=>{},
           backgroundColor: Colors.blueAccent,
-          child: Icon(Icons.ac_unit,color: Colors.amber,),
+          child: Icon(Icons.ac_unit,color: Colors.amberAccent,),
         ),
     ),
     );
