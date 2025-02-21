@@ -1,18 +1,17 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:date_field/date_field.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 
-import '../model/user.dart';
-import 'package:http_parser/http_parser.dart';
 
 import 'loginpage.dart';
 
 class RegistrationPage extends StatefulWidget {
+  const RegistrationPage({super.key});
+
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
 }
@@ -80,12 +79,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
       if (response.statusCode == 201 || response.statusCode == 200  ) {
         // Registration successful
-        print('Registration successful!');
+        if (kDebugMode) {
+          print('Registration successful!');
+        }
       } else if (response.statusCode == 409) {
         // User already exists
-        print('User already exists!');
+        if (kDebugMode) {
+          print('User already exists!');
+        }
       } else {
-        print('Registration failed with status: ${response.statusCode}');
+        if (kDebugMode) {
+          print('Registration failed with status: ${response.statusCode}');
+        }
       }
     }
   }
