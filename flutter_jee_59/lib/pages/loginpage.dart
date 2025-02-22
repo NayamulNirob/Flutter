@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -6,6 +7,8 @@ class Loginpage extends StatelessWidget {
 
 final TextEditingController email= TextEditingController();
 final TextEditingController password= TextEditingController();
+
+  Loginpage({super.key});
 
 
   @override
@@ -72,7 +75,9 @@ final TextEditingController password= TextEditingController();
                 onPressed: (){
                   String em = email.text;
                   String pass=password.text;
-                  print('Email: $em, \nPassword: $pass');
+                  if (kDebugMode) {
+                    print('Email: $em, \nPassword: $pass');
+                  }
 
                 },
                 style:ElevatedButton.styleFrom(
