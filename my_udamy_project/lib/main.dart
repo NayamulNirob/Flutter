@@ -20,7 +20,6 @@ void main() {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBarDesign(),
-        backgroundColor: const Color.fromARGB(255, 59, 6, 151),
         body: GrediantContainer(),
         floatingActionButton: FlotButton(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -96,5 +95,6 @@ class FlotButton extends StatelessWidget {
             ],
           ),
         );
+        
   }
 }
