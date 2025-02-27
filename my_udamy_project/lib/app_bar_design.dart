@@ -14,7 +14,7 @@ class AppBarDesign extends StatelessWidget implements PreferredSizeWidget {
       title: Padding(
         padding: EdgeInsets.only(top: 11.0),
         child: Text(
-          'New App',
+          'Dice App',
           style: TextStyle(color: Colors.deepOrangeAccent),
         ),
       ),
