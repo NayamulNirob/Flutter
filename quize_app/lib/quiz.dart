@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quize_app/design_app_bar.dart';
+import 'package:quize_app/question_screen.dart';
+import 'package:quize_app/start_screen.dart';
 
 class Quiz extends StatefulWidget {
   const Quiz({super.key});
@@ -9,6 +11,14 @@ class Quiz extends StatefulWidget {
 }
 
 class _QuizState extends State<Quiz> {
+  Widget activeScreen = StartScreen();
+
+ void switchScreen(){
+    setState(() {
+      activeScreen = QuestionScreen();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,41 +36,7 @@ class _QuizState extends State<Quiz> {
               ],
             ),
           ),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Image.asset(
-                  'assets/quiz-logo.png',
-                  width: 300,
-                  color: const Color.from(
-                    alpha: 0.384,
-                    red: 0.992,
-                    green: 0.996,
-                    blue: 1,
-                  ),
-                ),
-                SizedBox(height: 80),
-                Text(
-                  'Flutter Learning Is a Fun',
-                  style: TextStyle(color: Colors.white, fontSize: 24),
-                ),
-                SizedBox(height: 30),
-                OutlinedButton.icon(
-                  onPressed: () => {},
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    iconColor: Colors.white,
-                    side: BorderSide(color: Colors.white),
-                  ),
-                  label: Text('Start Quiz'),
-                  icon: Icon(Icons.arrow_right_alt),
-                ),
-              ],
-            ),
-          ),
+          child: activeScreen,
         ),
       ),
     );
