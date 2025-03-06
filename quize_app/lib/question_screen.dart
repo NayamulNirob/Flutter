@@ -34,7 +34,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
           children: [
             Text(
               currentQuestion.text,
-              style: GoogleFonts.lato(textStyle: TextStyle(color:Color.fromARGB(255, 255, 254, 247),fontSize: 25)),
+              style: GoogleFonts.lato(color: const Color.fromARGB(255, 214, 214, 210), fontSize: 20,fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 30),
