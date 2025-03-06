@@ -28,7 +28,7 @@ class _StartScreenState extends State<StartScreen> {
               blue: 1,
             ),
           ),
-          SizedBox(height: 80),
+          SizedBox(height: 60),
           Text(
             'Flutter Learning Is a Fun',
             style: TextStyle(color: Colors.white, fontSize: 24),

@@ -10,36 +10,38 @@ class QuestionScreen extends StatefulWidget {
 }
 
 class _QuestionScreenState extends State<QuestionScreen> {
-
-  final currentQuestion=questions[0];
+  final currentQuestion = questions[0];
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        spacing: 10, // Horizontal space between button
-
-        children: [
-          // ElevatedButton(
-          //   onPressed: () {
-          //     Navigator.pop(
-          //       context,
-          //       MaterialPageRoute(builder: (context) => ),
-          //     );
-          //   },
-          //   child: Text(
-          //     'Go to previous Screen',
-          //   ),
-          // ),
-          Text(currentQuestion.text,style: TextStyle(color: Colors.white),),
-          SizedBox(height: 30),
-          AnswerBtn(ontab: () {  }, answerText: currentQuestion.answers[0], ),
-          AnswerBtn(answerText: currentQuestion.answers[1], ontab: (){}),
-          AnswerBtn(answerText: currentQuestion.answers[2], ontab: (){}),
-          AnswerBtn(answerText: currentQuestion.answers[3], ontab: (){}),
-        ],
+      child: Container(
+        padding: EdgeInsets.all(45),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 10, // Horizontal space between button
+        
+          children: [
+            // ElevatedButton(
+            //   onPressed: () {
+            //     Navigator.pop(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => ),
+            //     );
+            //   },
+            //   child: Text(
+            //     'Go to previous Screen',
+            //   ),
+            // ),
+            Text(currentQuestion.text, style: TextStyle(color: Colors.white),textAlign: TextAlign.center,),
+            SizedBox(height: 30),
+            ...currentQuestion.answers.map((answer) {
+              return (AnswerBtn(answerText: answer, ontab: () {}));
+            }),
+          ],
+        ),
       ),
     );
   }
