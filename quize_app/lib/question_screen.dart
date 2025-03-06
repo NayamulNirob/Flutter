@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quize_app/answer_btn.dart';
+import 'package:quize_app/data/questions.dart';
 
 class QuestionScreen extends StatefulWidget {
   const QuestionScreen({super.key});
@@ -9,6 +10,9 @@ class QuestionScreen extends StatefulWidget {
 }
 
 class _QuestionScreenState extends State<QuestionScreen> {
+
+  final currentQuestion=questions[0];
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -29,11 +33,12 @@ class _QuestionScreenState extends State<QuestionScreen> {
           //     'Go to previous Screen',
           //   ),
           // ),
-          Text('Questions....',style: TextStyle(color: Colors.white),),
+          Text(currentQuestion.text,style: TextStyle(color: Colors.white),),
           SizedBox(height: 30),
-          AnswerBtn(ontab: () {  }, answerText: 'Answer 1', ),
-          AnswerBtn(answerText: 'Answer 2', ontab: (){}),
-          AnswerBtn(answerText: 'Answer 3', ontab: (){}),
+          AnswerBtn(ontab: () {  }, answerText: currentQuestion.answers[0], ),
+          AnswerBtn(answerText: currentQuestion.answers[1], ontab: (){}),
+          AnswerBtn(answerText: currentQuestion.answers[2], ontab: (){}),
+          AnswerBtn(answerText: currentQuestion.answers[3], ontab: (){}),
         ],
       ),
     );
