@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:quize_app/answer_btn.dart';
 import 'package:quize_app/data/questions.dart';
 
@@ -10,10 +11,17 @@ class QuestionScreen extends StatefulWidget {
 }
 
 class _QuestionScreenState extends State<QuestionScreen> {
-  final currentQuestion = questions[0];
+  var currentQuestionIndex = 0;
+
+  void answerQuestion() {
+    setState(() {
+      currentQuestionIndex++;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final currentQuestion = questions[currentQuestionIndex];
     return SizedBox(
       width: double.infinity,
       child: Container(
@@ -22,23 +30,16 @@ class _QuestionScreenState extends State<QuestionScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 10, // Horizontal space between button
-        
+
           children: [
-            // ElevatedButton(
-            //   onPressed: () {
-            //     Navigator.pop(
-            //       context,
-            //       MaterialPageRoute(builder: (context) => ),
-            //     );
-            //   },
-            //   child: Text(
-            //     'Go to previous Screen',
-            //   ),
-            // ),
-            Text(currentQuestion.text, style: TextStyle(color: Colors.white),textAlign: TextAlign.center,),
+            Text(
+              currentQuestion.text,
+              style: GoogleFonts.lato(textStyle: TextStyle(color:Color.fromARGB(255, 255, 254, 247),fontSize: 25)),
+              textAlign: TextAlign.center,
+            ),
             SizedBox(height: 30),
-            ...currentQuestion.answers.map((answer) {
-              return (AnswerBtn(answerText: answer, ontab: () {}));
+            ...currentQuestion.getSuffaledAnswers().map((answer) {
+              return (AnswerBtn(answerText: answer, ontab: answerQuestion));
             }),
           ],
         ),
