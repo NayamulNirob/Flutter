@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:quize_app/answer_btn.dart';
 
 class QuestionScreen extends StatefulWidget {
   const QuestionScreen({super.key});
@@ -11,22 +11,30 @@ class QuestionScreen extends StatefulWidget {
 class _QuestionScreenState extends State<QuestionScreen> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                const Color.fromARGB(255, 83, 5, 97),
-                const Color.fromARGB(255, 143, 16, 165),
-              ],
-            ),
-          ),
-          child: Center(child: Text('Question Screen', style: TextStyle(color: Colors.white))),
-        ),
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 10, // Horizontal space between button
+
+        children: [
+          // ElevatedButton(
+          //   onPressed: () {
+          //     Navigator.pop(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => ),
+          //     );
+          //   },
+          //   child: Text(
+          //     'Go to previous Screen',
+          //   ),
+          // ),
+          Text('Questions....',style: TextStyle(color: Colors.white),),
+          SizedBox(height: 30),
+          AnswerBtn(ontab: () {  }, answerText: 'Answer 1', ),
+          AnswerBtn(answerText: 'Answer 2', ontab: (){}),
+          AnswerBtn(answerText: 'Answer 3', ontab: (){}),
+        ],
       ),
     );
   }

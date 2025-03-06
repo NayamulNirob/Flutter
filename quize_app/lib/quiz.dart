@@ -11,9 +11,12 @@ class Quiz extends StatefulWidget {
 }
 
 class _QuizState extends State<Quiz> {
-   Widget? activeScreen;
+  Widget? activeScreen; // 1st method of leafting & Rendering with initState
 
-  @override
+  // var activeScreen =
+  //     'Start-Screen'; // 2nd method of leafting & Rendering with tarnary expression
+
+  @override // 1st method of leafting & Rendering with initState
   void initState() {
     activeScreen = StartScreen(switchScreen);
     super.initState();
@@ -21,12 +24,20 @@ class _QuizState extends State<Quiz> {
 
   void switchScreen() {
     setState(() {
-      activeScreen = QuestionScreen();
+       activeScreen = QuestionScreen(); // 1st method of leafting & Rendering with initState
+
+      // activeScreen =
+      //     'Question-Screen'; // 2nd method of leafting & Rendering with tarnary expression
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    // final swipScreen =
+    //     activeScreen == 'Start-Screen'
+    //         ? StartScreen(switchScreen)
+    //         : QuestionScreen(); // 2nd method of leafting & Rendering with tarnary expression
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -42,7 +53,10 @@ class _QuizState extends State<Quiz> {
               ],
             ),
           ),
-          child: activeScreen,
+          child:
+          activeScreen, // 1st method of leafting & Rendering with initState
+          // child:
+          //     swipScreen, // 2nd method of leafting & Rendering with tarnary expression
         ),
       ),
     );
