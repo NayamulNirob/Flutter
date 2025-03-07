@@ -4,7 +4,9 @@ import 'package:quize_app/answer_btn.dart';
 import 'package:quize_app/data/questions.dart';
 
 class QuestionScreen extends StatefulWidget {
-  const QuestionScreen({super.key});
+  const QuestionScreen({super.key, required this.onSelectedAnswer});
+
+  final void Function(String answer) onSelectedAnswer;
 
   @override
   State<QuestionScreen> createState() => _QuestionScreenState();
@@ -13,7 +15,8 @@ class QuestionScreen extends StatefulWidget {
 class _QuestionScreenState extends State<QuestionScreen> {
   var currentQuestionIndex = 0;
 
-  void answerQuestion() {
+  void answerQuestion(String selectedAnswer) {
+    widget.onSelectedAnswer(selectedAnswer);
     setState(() {
       currentQuestionIndex++;
     });
@@ -34,12 +37,21 @@ class _QuestionScreenState extends State<QuestionScreen> {
           children: [
             Text(
               currentQuestion.text,
-              style: GoogleFonts.lato(color: const Color.fromARGB(255, 214, 214, 210), fontSize: 20,fontWeight: FontWeight.bold),
+              style: GoogleFonts.lato(
+                color: const Color.fromARGB(255, 214, 214, 210),
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 30),
             ...currentQuestion.getSuffaledAnswers().map((answer) {
-              return (AnswerBtn(answerText: answer, ontab: answerQuestion));
+              return (AnswerBtn(
+                answerText: answer,
+                onTab: () {
+                  answerQuestion(answer);
+                },
+              ));
             }),
           ],
         ),

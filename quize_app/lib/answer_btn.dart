@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 class AnswerBtn extends StatelessWidget {
-  const AnswerBtn({super.key, required this.answerText, required this.ontab});
+  const AnswerBtn({super.key, required this.answerText, required this.onTab});
 
   final String answerText;
 
-  final void Function() ontab;
+  final void Function() onTab;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: ontab,
+      onPressed: onTab,
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color.fromARGB(255, 9, 1, 119),
         foregroundColor: const Color.fromARGB(255, 255, 255, 255),

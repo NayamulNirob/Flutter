@@ -11,24 +11,31 @@ class Quiz extends StatefulWidget {
 }
 
 class _QuizState extends State<Quiz> {
-  Widget? activeScreen; // 1st method of leafting & Rendering with initState
+  // Widget? activeScreen; // 1st method of leafting & Rendering with initState
 
-  // var activeScreen =
-  //     'Start-Screen'; // 2nd method of leafting & Rendering with tarnary expression
+  var activeScreen =
+      'start-screen'; // 2nd method of leafting & Rendering with tarnary expression
 
-  @override // 1st method of leafting & Rendering with initState
-  void initState() {
-    activeScreen = StartScreen(switchScreen);
-    super.initState();
-  }
+  final List<String> selectedAnswer = [];
+
+  // @override // 1st method of leafting & Rendering with initState
+  // void initState() {
+  //   activeScreen = StartScreen(switchScreen);
+  //   super.initState();
+  // }
 
   void switchScreen() {
     setState(() {
-       activeScreen = QuestionScreen(); // 1st method of leafting & Rendering with initState
-
       // activeScreen =
-      //     'Question-Screen'; // 2nd method of leafting & Rendering with tarnary expression
+      //     QuestionScreen(choosenAnswer); // 1st method of leafting & Rendering with initState
+
+      activeScreen =
+          'question-screen'; // 2nd method of leafting & Rendering with tarnary expression
     });
+  }
+
+  void choosenAnswer(String answer) {
+    selectedAnswer.add(answer);
   }
 
   @override
@@ -36,7 +43,13 @@ class _QuizState extends State<Quiz> {
     // final swipScreen =
     //     activeScreen == 'Start-Screen'
     //         ? StartScreen(switchScreen)
-    //         : QuestionScreen(); // 2nd method of leafting & Rendering with tarnary expression
+    //         : QuestionScreen(choosenAnswer); // 2nd method of leafting & Rendering with tarnary expression
+
+    Widget screenWidget = StartScreen(switchScreen);
+
+    if (activeScreen == 'question-screen') {
+      screenWidget = QuestionScreen(onSelectedAnswer: choosenAnswer);
+    }
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -53,10 +66,11 @@ class _QuizState extends State<Quiz> {
               ],
             ),
           ),
-          child:
-          activeScreen, // 1st method of leafting & Rendering with initState
+          // child:
+          //     activeScreen, // 1st method of leafting & Rendering with initState
           // child:
           //     swipScreen, // 2nd method of leafting & Rendering with tarnary expression
+          child: screenWidget,
         ),
       ),
     );
