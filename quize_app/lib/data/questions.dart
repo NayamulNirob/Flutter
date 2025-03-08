@@ -41,6 +41,8 @@ var questions = [
     'By calling updateState()',
   ]),
 
+  ];
+
 //   QuizQuestion('What is Flutter?', [
 //     'A framework for building natively compiled applications',
 //     'A programming language',
@@ -1025,4 +1027,4 @@ var questions = [
 // ]),
 
 
-];
+

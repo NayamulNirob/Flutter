@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quize_app/data/questions.dart';
 import 'package:quize_app/design_app_bar.dart';
 import 'package:quize_app/question_screen.dart';
+import 'package:quize_app/result_screen.dart';
 import 'package:quize_app/start_screen.dart';
 
 class Quiz extends StatefulWidget {
@@ -17,7 +18,7 @@ class _QuizState extends State<Quiz> {
   var activeScreen =
       'start-screen'; // 2nd method of leafting & Rendering with tarnary expression
 
-  final List<String> selectedAnswer = [];
+  List<String> selectedAnswer = [];
 
   // @override // 1st method of leafting & Rendering with initState
   // void initState() {
@@ -39,7 +40,8 @@ class _QuizState extends State<Quiz> {
     selectedAnswer.add(answer);
     if (selectedAnswer.length == questions.length) {
       setState(() {
-        activeScreen = 'start-screen';
+        selectedAnswer = [];
+        activeScreen = 'results-screen';
       });
     }
   }
@@ -55,6 +57,10 @@ class _QuizState extends State<Quiz> {
 
     if (activeScreen == 'question-screen') {
       screenWidget = QuestionScreen(onSelectedAnswer: choosenAnswer);
+    }
+
+    if (activeScreen == 'results-screen') {
+      screenWidget = ResultScreen(choosenAnswer: selectedAnswer,);
     }
 
     return MaterialApp(
