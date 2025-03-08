@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class QuestionSummary extends StatelessWidget {
   const QuestionSummary({super.key, required this.summaryData});
 
@@ -13,12 +12,13 @@ class QuestionSummary extends StatelessWidget {
           summaryData.map((data) {
             return Row(
               children: [
-                Text(((['question_index'] as int) + 1).toString()),
+                Text(((data['question_index'] as int) + 1).toString()),
                 Column(
                   children: [
                     Text(data['question']as String),
                     SizedBox(height: 5,),
                     Text(data['user_answer'] as String),
+                    // Text('user_answer: ${data['user_answer']}'),
                     Text(data['correct_answer']as String),
                   ],
                 ),
@@ -27,4 +27,17 @@ class QuestionSummary extends StatelessWidget {
           }).toList(),
     );
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Column(
+  //     children:
+  //         summaryData.map((data) {
+  //           return ListTile(
+  //             title: Text(data['question'] as String),
+  //             subtitle: Text('Your answer: ${data['user_answer']}'),
+  //           );
+  //         }).toList(),
+  //   );
+  // }
 }

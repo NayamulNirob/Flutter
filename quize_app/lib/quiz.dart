@@ -13,26 +13,13 @@ class Quiz extends StatefulWidget {
 }
 
 class _QuizState extends State<Quiz> {
-  // Widget? activeScreen; // 1st method of leafting & Rendering with initState
-
-  var activeScreen =
-      'start-screen'; // 2nd method of leafting & Rendering with tarnary expression
+  var activeScreen = 'start-screen';
 
   List<String> selectedAnswer = [];
 
-  // @override // 1st method of leafting & Rendering with initState
-  // void initState() {
-  //   activeScreen = StartScreen(switchScreen);
-  //   super.initState();
-  // }
-
   void switchScreen() {
     setState(() {
-      // activeScreen =
-      //     QuestionScreen(choosenAnswer); // 1st method of leafting & Rendering with initState
-
-      activeScreen =
-          'question-screen'; // 2nd method of leafting & Rendering with tarnary expression
+      activeScreen = 'question-screen';
     });
   }
 
@@ -40,7 +27,7 @@ class _QuizState extends State<Quiz> {
     selectedAnswer.add(answer);
     if (selectedAnswer.length == questions.length) {
       setState(() {
-        selectedAnswer = [];
+        // selectedAnswer = [];
         activeScreen = 'results-screen';
       });
     }
@@ -48,11 +35,6 @@ class _QuizState extends State<Quiz> {
 
   @override
   Widget build(BuildContext context) {
-    // final swipScreen =
-    //     activeScreen == 'Start-Screen'
-    //         ? StartScreen(switchScreen)
-    //         : QuestionScreen(choosenAnswer); // 2nd method of leafting & Rendering with tarnary expression
-
     Widget screenWidget = StartScreen(switchScreen);
 
     if (activeScreen == 'question-screen') {
@@ -60,7 +42,7 @@ class _QuizState extends State<Quiz> {
     }
 
     if (activeScreen == 'results-screen') {
-      screenWidget = ResultScreen(choosenAnswer: selectedAnswer,);
+      screenWidget = ResultScreen(choosenAnswer: selectedAnswer);
     }
 
     return MaterialApp(
@@ -78,10 +60,7 @@ class _QuizState extends State<Quiz> {
               ],
             ),
           ),
-          // child:
-          //     activeScreen, // 1st method of leafting & Rendering with initState
-          // child:
-          //     swipScreen, // 2nd method of leafting & Rendering with tarnary expression
+
           child: screenWidget,
         ),
       ),
