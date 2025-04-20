@@ -20,7 +20,8 @@ class _ExpenseState extends State<Expense> {
           children: [
             Text("Hello"),
             Text("Hey"),
-            Text("Hi")
+            Text("Hi"),
+            Text("Hello"),
           ],
         ),
       ),
